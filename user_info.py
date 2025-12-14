@@ -24,5 +24,6 @@ def get_user_data():
     return user
 
 # 调用示例
-user_data = get_user_data()
-print(user_data)
+#user_data = get_user_data()
+
+#print(user_data)
