@@ -21,7 +21,7 @@
 └── README.md                # 项目说明（暂时未完成）
 
 使用说明：
-1.启动环境
+1.本地启动环境
   python app.py
 
  * Running on all addresses (0.0.0.0)
