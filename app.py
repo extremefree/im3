@@ -11,7 +11,7 @@ PASSWORD = '@#1Uc&sp0hN3E'
 @app.route('/login', methods=['POST'])  
 def login():
     username = request.form.get('username')
-    password = request.form.get('password')
+    password = request.form.get('password') 
     
     if username == USERNAME and password == PASSWORD:
         session['logged_in'] = True
@@ -82,5 +82,5 @@ def logout():
     return render_template('login.html')
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', use_reloader=False)
+    app.run(debug=True, host='0.0.0.0',port=5051, use_reloader=False)
 
