@@ -77,11 +77,25 @@
     <div class="login-container">
         <div class="logo">清华附中冬令营实训系统</div>
         <h1>欢迎登录</h1>
+        
+        {% if error %}
+        <div style="color: red; margin-bottom: 16px; font-size: 14px; background-color: #ffe6e6; padding: 10px; border-radius: 4px;">
+            {{ error }}
+        </div>
+        {% endif %}
+        
+        {% if success %}
+        <div style="color: green; margin-bottom: 16px; font-size: 14px; background-color: #e6ffe6; padding: 10px; border-radius: 4px;">
+            {{ success }}
+        </div>
+        {% endif %}
+        
         <form id="login-form" method="POST" action="/login">
             <input type="text" id="username" name="username" placeholder="用户名" required>
             <input type="password" id="password" name="password" placeholder="密码" required>
             <button type="submit">登录</button>
         </form>
+        <a href="/register">还没有账号？立即注册</a>
         <a href="#">忘记密码？</a>
     </div>
 </body>
