@@ -104,12 +104,18 @@ def register_page():
 
 
 ### 注册处理###
+# ===============================================
+# TODO:可以给学生自己发挥，甚至这里可以写口令强度评价器
+# ===============================================
+
 @app.route('/register', methods=['POST'])
 def register():
     # 获取用户输入的注册信息
     input_username = request.form.get('username')
     input_password = request.form.get('password')
     input_password_confirm = request.form.get('password_confirm')
+
+    # ===============TODO 口令强度检测================
 
     # 1. 检查用户名是否为空
     if not input_username or not input_password:
@@ -126,6 +132,8 @@ def register():
     # 4. 检查两次密码是否一致
     if input_password != input_password_confirm:
         return render_template('register.html', error='两次输入的密码不一致')
+
+    # ===============================================
 
     # 5. 检查用户名是否已存在
     if check_username_exists(input_username):
