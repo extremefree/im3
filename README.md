@@ -13,10 +13,10 @@
 │   ├── base.html
 │   ├── index.html
 │   ├── login.html
-│   ├── example1.html
-│   ├── example2.html
-│   ├── example3.html
-│   ├── example4.html
+│   ├── register.html
+│   ├── AISecurity.html
+│   ├── PasswordSecurity.html
+│   ├── blog.html
 │   └── profile.html
 │   └── 模板继承使用案例（未使用）.html
 └── README.md                # 项目说明（暂时未完成）
