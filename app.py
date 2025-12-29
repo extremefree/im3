@@ -187,9 +187,19 @@ def register_page():
 
 
 ### 注册处理###
-# ===============================================
-# TODO:可以给学生自己发挥，甚至这里可以写口令强度评价器
-# ===============================================
+
+# TODO(实验任务): 口令强度检测
+def validate_register_form(username, password, password_confirm):
+        if not username or not password:
+            return False, '用户名和密码不能为空'
+        if len(username) < 3:
+            return False, '用户名至少需要3个字符'
+        ok, message = evaluate_password_strength(password, username)
+        if not ok:
+            return False, message or '密码强度不足'
+        if password != password_confirm:
+            return False, '两次输入的密码不一致'
+        return True, None   # 返回True表示验证成功，None表示没有错误    
 
 @app.route('/register', methods=['POST'])
 def register():
@@ -198,21 +208,9 @@ def register():
     input_password = request.form.get('password')
     input_password_confirm = request.form.get('password_confirm')
 
-    # ===============TODO 口令强度检测（实验任务）================
-    if not input_username or not input_password:
-        return render_template('register.html', error='用户名和密码不能为空')
-
-    if len(input_username) < 3:
-        return render_template('register.html', error='用户名至少需要3个字符')
-
-    ok, message = evaluate_password_strength(input_password, input_username)
+    ok, error_message = validate_register_form(input_username, input_password, input_password_confirm)
     if not ok:
-        return render_template('register.html', error=message or '密码强度不足')
-
-    if input_password != input_password_confirm:
-        return render_template('register.html', error='两次输入的密码不一致')
-
-    # ===============================================
+        return render_template('register.html', error=error_message)
 
     # 5. 检查用户名是否已存在
     if check_username_exists(input_username):
