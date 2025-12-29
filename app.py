@@ -225,7 +225,7 @@ def register():
         return render_template('register.html', error='注册失败，请重试')
 
 
-### 默认页面###
+###1.默认页面###
 
 
 @app.route('/')
@@ -235,7 +235,7 @@ def home():
         return redirect(url_for('index'))
     return render_template('login.html')
 
-### 首页###
+###2.首页###
 
 
 @app.route('/index')
@@ -245,47 +245,34 @@ def index():
         return redirect(url_for('home'))
     return render_template('index.html')
 
-### 案例1页面###
+###3.博客###
 
-
-@app.route("/example1")
-def example1():
+@app.route("/blog")
+def blog():
     if not session.get('logged_in'):
         return redirect(url_for('home'))
+        
+    return render_template("blog.html")
 
-    return render_template("example1.html")
+###4.密码安全###
 
-### XX案例2页面###
-
-
-@app.route("/example2")
-def example2():
+@app.route("/PasswordSecurity")
+def PasswordSecurity():
     if not session.get('logged_in'):
         return redirect(url_for('home'))
+    
+    return render_template("PasswordSecurity.html")
 
-    return render_template("example2.html")
+###5.AI安全###
 
-### XX案例3页面###
-
-
-@app.route("/example3")
-def example3():
+@app.route("/AISecurity")
+def AISecurity():
     if not session.get('logged_in'):
         return redirect(url_for('home'))
+    
+    return render_template("AISecurity.html")
 
-    return render_template("example3.html")
-
-### XX案例4页面###
-
-
-@app.route("/example4")
-def example4():
-    if not session.get('logged_in'):
-        return redirect(url_for('home'))
-
-    return render_template("example4.html")
-
-### 个人中心###
+###6.个人中心###
 
 
 @app.route("/profile")
@@ -296,7 +283,7 @@ def profile():
     # print(userinfo)
     return render_template("profile.html", userinfo=userinfo)
 
-### 退出页面###
+###7.退出页面###
 
 
 @app.route('/logout')
