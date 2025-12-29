@@ -1,7 +1,542 @@
 {% extends "base.html" %}
-{% block title %}首页 - 冬令营实训系统{% endblock %}
+{% block title %}首页{% endblock %}
 
 {% block content %}
-    <h1>hello, index!</h1>
-    <p>这里是首页的具体内容...</p>
+<div class="page-container">
+    <div class="page-header">
+        <h2><i class="fas fa-snowflake"></i> 冬令营实训系统（内容待定）</h2>
+        <p>欢迎参加冬令营实训课程！本课程将带您全面了解现代Web开发与网络安全技术，通过实践掌握核心技能。</p>
+    </div>
+    
+    <div class="welcome-section">
+        <div class="welcome-card">
+            <div class="welcome-icon">
+                <i class="fas fa-graduation-cap"></i>
+            </div>
+            <h3>课程目标</h3>
+            <p>掌握Web开发全栈技能，理解密码安全原理，探索AI安全前沿技术，培养解决实际问题的能力。</p>
+        </div>
+        
+        <div class="welcome-card">
+            <div class="welcome-icon">
+                <i class="fas fa-calendar-alt"></i>
+            </div>
+            <h3>课程时长</h3>
+            <p>为期2周的集中实训，每天6小时学习时间，包含理论讲解、实践操作和项目开发。</p>
+        </div>
+        
+        <div class="welcome-card">
+            <div class="welcome-icon">
+                <i class="fas fa-users"></i>
+            </div>
+            <h3>适合人群</h3>
+            <p>适合有一定编程基础的学生和开发者，希望提升Web开发与网络安全技能的学员。</p>
+        </div>
+    </div>
+    
+    <div class="course-modules">
+        <h2 class="section-title">
+            <i class="fas fa-cubes"></i> 
+            三大核心模块
+        </h2>
+        <p class="section-description">本课程围绕三个核心模块展开，每个模块都包含丰富的理论与实践内容</p>
+        
+        <div class="modules-container">
+            <!-- 模块1：网站建设 -->
+            <div class="module-card module-1">
+                <div class="module-header">
+                    <div class="module-icon">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <h3>网站建设模块</h3>
+                    <span class="module-number">模块一</span>
+                </div>
+                <div class="module-content">
+                    <p>学习现代Web开发技术，从零开始构建完整的网站应用。</p>
+                    <ul class="module-features">
+                        <li><i class="fas fa-check-circle"></i> Flask框架基础与应用</li>
+                        <li><i class="fas fa-check-circle"></i> HTML5/CSS3/JavaScript</li>
+                        <li><i class="fas fa-check-circle"></i> 响应式设计与用户体验</li>
+                        <li><i class="fas fa-check-circle"></i> 数据库设计与操作</li>
+                        <li><i class="fas fa-check-circle"></i> RESTful API开发</li>
+                        <li><i class="fas fa-check-circle"></i> 项目部署与运维</li>
+                    </ul>
+                </div>
+                <div class="module-footer">
+                    <span class="module-duration"><i class="far fa-clock"></i> 5天</span>
+                    <a href="#" class="module-link">开始学习 <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+            
+            <!-- 模块2：密码安全 -->
+            <div class="module-card module-2">
+                <div class="module-header">
+                    <div class="module-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>密码安全模块</h3>
+                    <span class="module-number">模块二</span>
+                </div>
+                <div class="module-content">
+                    <p>深入理解密码学原理，掌握现代安全防护技术。</p>
+                    <ul class="module-features">
+                        <li><i class="fas fa-check-circle"></i> 密码学基础理论</li>
+                        <li><i class="fas fa-check-circle"></i> 哈希算法与加盐技术</li>
+                        <li><i class="fas fa-check-circle"></i> 对称与非对称加密</li>
+                        <li><i class="fas fa-check-circle"></i> 数字签名与证书</li>
+                        <li><i class="fas fa-check-circle"></i> 常见安全漏洞防范</li>
+                        <li><i class="fas fa-check-circle"></i> 安全编程最佳实践</li>
+                    </ul>
+                </div>
+                <div class="module-footer">
+                    <span class="module-duration"><i class="far fa-clock"></i> 4天</span>
+                    <a href="{{ url_for('PasswordSecurity') }}" class="module-link">开始学习 <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+            
+            <!-- 模块3：AI安全 -->
+            <div class="module-card module-3">
+                <div class="module-header">
+                    <div class="module-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3>AI安全模块</h3>
+                    <span class="module-number">模块三</span>
+                </div>
+                <div class="module-content">
+                    <p>探索人工智能安全前沿，了解AI系统的风险与防护。</p>
+                    <ul class="module-features">
+                        <li><i class="fas fa-check-circle"></i> AI安全基础概念</li>
+                        <li><i class="fas fa-check-circle"></i> 机器学习模型安全</li>
+                        <li><i class="fas fa-check-circle"></i> 对抗样本与防御</li>
+                        <li><i class="fas fa-check-circle"></i> 数据隐私与保护</li>
+                        <li><i class="fas fa-check-circle"></i> AI伦理与合规</li>
+                        <li><i class="fas fa-check-circle"></i> 未来安全趋势</li>
+                    </ul>
+                </div>
+                <div class="module-footer">
+                    <span class="module-duration"><i class="far fa-clock"></i> 3天</span>
+                    <a href="{{ url_for('AISecurity') }}" class="module-link">开始学习 <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="learning-path">
+        <h2 class="section-title">
+            <i class="fas fa-road"></i> 
+            学习路径
+        </h2>
+        <p class="section-description">跟随我们的学习路径，循序渐进掌握所有技能</p>
+        
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-date">第1周</div>
+                <div class="timeline-content">
+                    <h4>基础建设阶段</h4>
+                    <p>掌握Web开发基础，完成个人博客系统开发，学习前端与后端技术栈。</p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-date">第2周前半</div>
+                <div class="timeline-content">
+                    <h4>安全加固阶段</h4>
+                    <p>学习密码安全技术，为网站添加安全防护，理解常见攻击与防御方法。</p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-date">第2周后半</div>
+                <div class="timeline-content">
+                    <h4>AI探索阶段</h4>
+                    <p>了解AI安全前沿，探索智能系统风险，完成综合项目实践。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="cta-section">
+        <h2>准备好开始您的冬令营之旅了吗？</h2>
+        <p>立即加入我们，开启为期2周的技术实训，掌握前沿的开发与安全技能。</p>
+        <div class="cta-buttons">
+            <a href="{{ url_for('blog') }}" class="btn-primary">
+                <i class="fas fa-book-open"></i> 查看课程博客
+            </a>
+            <a href="{{ url_for('profile') }}" class="btn-secondary">
+                <i class="fas fa-user-plus"></i> 注册学习账号
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* 页面容器 */
+    .page-container {
+        background-color: white;
+        border-radius: 16px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+        padding: 2.5rem;
+        margin-bottom: 2rem;
+    }
+    
+    /* 页面标题 */
+    .page-header {
+        margin-bottom: 3rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid #e2e8f0;
+        text-align: center;
+    }
+    
+    .page-header h2 {
+        font-size: 2.2rem;
+        color: #1e293b;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+    
+    .page-header p {
+        color: #64748b;
+        font-size: 1.2rem;
+        max-width: 800px;
+        margin: 0 auto;
+        line-height: 1.8;
+    }
+    
+    /* 欢迎区域 */
+    .welcome-section {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 3rem;
+    }
+    
+    .welcome-card {
+        background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+        padding: 2rem;
+        border-radius: 12px;
+        text-align: center;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .welcome-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+    
+    .welcome-icon {
+        font-size: 2.5rem;
+        color: #3b82f6;
+        margin-bottom: 1rem;
+    }
+    
+    .welcome-card h3 {
+        color: #1e293b;
+        font-size: 1.3rem;
+        margin-bottom: 1rem;
+    }
+    
+    .welcome-card p {
+        color: #64748b;
+        line-height: 1.7;
+    }
+    
+    /* 课程模块区域 */
+    .section-title {
+        font-size: 1.8rem;
+        color: #1e293b;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+    }
+    
+    .section-description {
+        color: #64748b;
+        margin-bottom: 2.5rem;
+        font-size: 1.1rem;
+    }
+    
+    .modules-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 2rem;
+        margin-bottom: 4rem;
+    }
+    
+    .module-card {
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+        transition: transform 0.3s ease;
+        border: 1px solid #e2e8f0;
+    }
+    
+    .module-card:hover {
+        transform: translateY(-10px);
+    }
+    
+    .module-header {
+        padding: 1.8rem 1.8rem 1rem;
+        position: relative;
+    }
+    
+    .module-1 .module-header {
+        background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    }
+    
+    .module-2 .module-header {
+        background: linear-gradient(135deg, #10b981 0%, #047857 100%);
+    }
+    
+    .module-3 .module-header {
+        background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+    }
+    
+    .module-icon {
+        font-size: 2.2rem;
+        color: white;
+        margin-bottom: 1rem;
+    }
+    
+    .module-header h3 {
+        color: white;
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+    
+    .module-number {
+        position: absolute;
+        top: 1.5rem;
+        right: 1.5rem;
+        background-color: rgba(255, 255, 255, 0.2);
+        color: white;
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+    
+    .module-content {
+        padding: 1.8rem;
+    }
+    
+    .module-content p {
+        color: #475569;
+        margin-bottom: 1.5rem;
+        font-size: 1.1rem;
+        line-height: 1.7;
+    }
+    
+    .module-features {
+        list-style: none;
+    }
+    
+    .module-features li {
+        padding: 0.5rem 0;
+        color: #475569;
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+    }
+    
+    .module-features i {
+        color: #10b981;
+        font-size: 1.1rem;
+    }
+    
+    .module-footer {
+        padding: 1.5rem 1.8rem;
+        border-top: 1px solid #e2e8f0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .module-duration {
+        color: #64748b;
+        font-size: 0.95rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .module-link {
+        color: #3b82f6;
+        text-decoration: none;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: color 0.3s ease;
+    }
+    
+    .module-link:hover {
+        color: #1d4ed8;
+    }
+    
+    /* 学习路径 */
+    .learning-path {
+        margin-bottom: 4rem;
+    }
+    
+    .timeline {
+        position: relative;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    
+    .timeline:before {
+        content: '';
+        position: absolute;
+        left: 30px;
+        top: 0;
+        bottom: 0;
+        width: 4px;
+        background: linear-gradient(to bottom, #3b82f6, #8b5cf6, #10b981);
+        border-radius: 2px;
+    }
+    
+    .timeline-item {
+        display: flex;
+        margin-bottom: 2.5rem;
+        position: relative;
+    }
+    
+    .timeline-date {
+        width: 70px;
+        padding: 0.6rem 0.8rem;
+        background-color: #3b82f6;
+        color: white;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        text-align: center;
+        margin-right: 2rem;
+        flex-shrink: 0;
+    }
+    
+    .timeline-content {
+        flex: 1;
+        background-color: #f8fafc;
+        padding: 1.5rem;
+        border-radius: 10px;
+        border: 1px solid #e2e8f0;
+    }
+    
+    .timeline-content h4 {
+        color: #1e293b;
+        font-size: 1.3rem;
+        margin-bottom: 0.8rem;
+    }
+    
+    .timeline-content p {
+        color: #64748b;
+        line-height: 1.7;
+    }
+    
+    /* 行动号召区域 */
+    .cta-section {
+        text-align: center;
+        padding: 3rem;
+        background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+        border-radius: 16px;
+        margin-top: 2rem;
+    }
+    
+    .cta-section h2 {
+        color: #1e293b;
+        font-size: 2rem;
+        margin-bottom: 1rem;
+    }
+    
+    .cta-section p {
+        color: #64748b;
+        font-size: 1.2rem;
+        margin-bottom: 2rem;
+        max-width: 700px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    .cta-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 1.5rem;
+        flex-wrap: wrap;
+    }
+    
+    .btn-primary, .btn-secondary {
+        padding: 0.9rem 2rem;
+        border-radius: 50px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 1.1rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.8rem;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-primary {
+        background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+        color: white;
+        box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+    }
+    
+    .btn-primary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+    }
+    
+    .btn-secondary {
+        background-color: white;
+        color: #3b82f6;
+        border: 2px solid #3b82f6;
+    }
+    
+    .btn-secondary:hover {
+        background-color: #3b82f6;
+        color: white;
+        transform: translateY(-3px);
+    }
+    
+    /* 响应式设计 */
+    @media (max-width: 768px) {
+        .page-container {
+            padding: 1.8rem 1.2rem;
+        }
+        
+        .page-header h2 {
+            font-size: 1.8rem;
+        }
+        
+        .page-header p {
+            font-size: 1.1rem;
+        }
+        
+        .modules-container {
+            grid-template-columns: 1fr;
+        }
+        
+        .timeline:before {
+            left: 15px;
+        }
+        
+        .timeline-date {
+            width: 60px;
+            margin-right: 1rem;
+            font-size: 0.8rem;
+        }
+        
+        .cta-section {
+            padding: 2rem 1.5rem;
+        }
+        
+        .btn-primary, .btn-secondary {
+            padding: 0.8rem 1.5rem;
+            font-size: 1rem;
+        }
+    }
+</style>
+
 {% endblock %}
