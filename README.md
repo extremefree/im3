@@ -27,8 +27,8 @@
   python app.py
 
  * Running on all addresses (0.0.0.0)
- * Running on http://127.0.0.1:5000
- * Running on http://192.168.50.208:5000
+ * Running on http://127.0.0.1:8080
+ * Running on http://192.168.50.208:8080
 
 
 ```bash
