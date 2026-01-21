@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, session, redirect, url_for
 from user_info import get_user_data
+from AI_backend import chatbot_bp
 import csv
 import os
 import time
@@ -11,11 +12,14 @@ from werkzeug.security import check_password_hash, generate_password_hash
 app = Flask(__name__)
 app.secret_key = 'RtRo%wKe4!'
 
+### 注册 Chatbot API 蓝图###
+app.register_blueprint(chatbot_bp)
+
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 USERINFO_CSV_PATH = os.path.join(BASE_DIR, 'data', 'userinfo.csv')
 
 # ======================= 实验开关（给学生改造用） =======================
-# TODO(实验任务): 打开/完善这些开关与函数，实现“登录防御”并做前后对比复测
+# TODO(实验任务): 打开/完善这些开关与函数，实现"登录防御"并做前后对比复测
 STORE_HASHED_PASSWORDS = True
 HIDE_ENUMERATION_ERRORS = False
 # =====================================================================
@@ -290,6 +294,24 @@ def profile():
 def logout():
     session.pop('logged_in', None)
     return render_template('login.html')
+
+###8.越狱挑战页面（无防御）###
+
+
+@app.route('/example3')
+def example3():
+    if not session.get('logged_in'):
+        return redirect(url_for('home'))
+    return render_template('example3.html')
+
+###9.防御挑战页面（有防御）###
+
+
+@app.route('/example4')
+def example4():
+    if not session.get('logged_in'):
+        return redirect(url_for('home'))
+    return render_template('example4.html')
 
 
 if __name__ == '__main__':
