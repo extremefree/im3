@@ -324,7 +324,7 @@ if __name__ == "__main__":
 
     # 初始化 ChatBot（
     MyChatbot = ChatBot(
-        api_key="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",
+        api_key="sk-xxxxx",
         model_name="meta-llama/llama-3-8b-instruct",
         base_url="https://openrouter.ai/api/v1",
         defense_framework=MyDefense(),
