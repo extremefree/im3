@@ -1,7 +1,156 @@
 {% extends "base.html" %}
-{% block title %}AI安全{% endblock %}
+{% block title %}AI安全 - 冬令营实训系统{% endblock %}
 
 {% block content %}
-    <h1>AI安全</h1>
-    <p>这里是AI安全模块...</p>
+    <h1>AI安全 - 越狱与防御挑战</h1>
+
+    <style>
+        .ai-security-container {
+            max-width: 1000px;
+            margin: 30px auto;
+        }
+
+        .challenge-cards {
+            display: flex;
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .challenge-card {
+            flex: 1;
+            border-radius: 12px;
+            padding: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-decoration: none;
+            display: block;
+        }
+
+        .challenge-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .challenge-card.nodedefense {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .challenge-card.mydefense {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .challenge-card:hover.nodedefense {
+            box-shadow: 0 10px 30px rgba(245, 87, 108, 0.4);
+        }
+
+        .challenge-card:hover.mydefense {
+            box-shadow: 0 10px 30px rgba(79, 172, 254, 0.4);
+        }
+
+        .challenge-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .challenge-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .challenge-desc {
+            font-size: 14px;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        .challenge-features {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .challenge-features ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            font-size: 13px;
+        }
+
+        .challenge-features li {
+            padding: 5px 0;
+        }
+
+        .challenge-features li::before {
+            content: "✓ ";
+        }
+
+        .info-section {
+            margin-top: 40px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 12px;
+            border-left: 4px solid #667eea;
+        }
+
+        .info-section h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .info-section p {
+            color: #666;
+            line-height: 1.8;
+        }
+    </style>
+
+    <div class="ai-security-container">
+        <p style="font-size: 16px; color: #666;">
+            本模块提供两种 AI 安全挑战模式，帮助你了解大语言模型的安全性测试与防御策略。
+        </p>
+
+        <div class="challenge-cards">
+            <a href="{{ url_for('example3') }}" class="challenge-card nodedefense">
+                <div class="challenge-icon">💀</div>
+                <div class="challenge-title">越狱挑战（NoDefense）</div>
+                <div class="challenge-desc">
+                    在无防御状态下测试 ChatBot，尝试突破安全限制，探索 AI 的脆弱点。
+                </div>
+                <div class="challenge-features">
+                    <ul>
+                        <li>体验真实的越狱攻击场景</li>
+                        <li>了解常见攻击手法</li>
+                        <li>学习安全边界的重要性</li>
+                    </ul>
+                </div>
+            </a>
+
+            <a href="{{ url_for('example4') }}" class="challenge-card mydefense">
+                <div class="challenge-icon">🛡️</div>
+                <div class="challenge-title">防御挑战（MyDefense）</div>
+                <div class="challenge-desc">
+                    编写防御策略保护 ChatBot，抵御各种越狱攻击，提升 AI 安全能力。
+                </div>
+                <div class="challenge-features">
+                    <ul>
+                        <li>设计防御机制</li>
+                        <li>测试防御有效性</li>
+                        <li>参与攻防竞赛</li>
+                    </ul>
+                </div>
+            </a>
+        </div>
+
+        <div class="info-section">
+            <h3>💡 学习建议</h3>
+            <p>
+                1. 先尝试 <strong>越狱挑战</strong>，了解攻击者可能使用的手段<br>
+                2. 再进入 <strong>防御挑战</strong>，学习如何构建有效的防御策略<br>
+                3. 使用"可用性检测"功能测试你的防御是否会影响正常功能<br>
+                4. 持续优化防御代码，在竞赛中取得好成绩
+            </p>
+        </div>
+    </div>
 {% endblock %}

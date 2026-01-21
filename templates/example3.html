@@ -1,7 +1,332 @@
 {% extends "base.html" %}
-{% block title %}案例3 - 冬令营实训系统{% endblock %}
+{% block title %}越狱挑战 - 冬令营实训系统{% endblock %}
 
 {% block content %}
-    <h1>案例3页面</h1>
-    <p>这里是案例3的具体内容...</p>
+    <h1>越狱挑战（NoDefense）</h1>
+
+    <style>
+        .main-container {
+            display: flex;
+            gap: 20px;
+            max-width: 1200px;
+            margin: 20px auto;
+        }
+
+        .sidebar {
+            flex: 0 0 280px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f5f5f5;
+            padding: 15px;
+            height: fit-content;
+            max-height: 700px;
+            overflow-y: auto;
+        }
+
+        .sidebar-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #007bff;
+        }
+
+        .topic-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .topic-btn {
+            padding: 12px;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            cursor: pointer;
+            text-align: left;
+            font-size: 13px;
+            transition: all 0.3s ease;
+            color: #333;
+            word-break: break-word;
+        }
+
+        .topic-btn:hover {
+            background-color: #e3f2fd;
+            border-color: #007bff;
+            box-shadow: 0 2px 4px rgba(0, 123, 255, 0.2);
+        }
+
+        .topic-btn.active {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+
+        .content-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chatbot-container {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            height: 600px;
+            background-color: #f9f9f9;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+            background-color: #fff;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .message {
+            margin-bottom: 12px;
+            display: flex;
+        }
+
+        .message.user {
+            justify-content: flex-end;
+        }
+
+        .message.bot {
+            justify-content: flex-start;
+        }
+
+        .message-content {
+            max-width: 70%;
+            padding: 10px 15px;
+            border-radius: 8px;
+            word-wrap: break-word;
+        }
+
+        .message.user .message-content {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .message.bot .message-content {
+            background-color: #e9ecef;
+            color: #333;
+        }
+
+        .input-area {
+            display: flex;
+            padding: 15px;
+            gap: 10px;
+        }
+
+        #messageInput {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        #sendBtn {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        #sendBtn:hover {
+            background-color: #0056b3;
+        }
+
+        #clearBtn {
+            padding: 10px 20px;
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        #clearBtn:hover {
+            background-color: #5a6268;
+        }
+
+        .button-area {
+            display: flex;
+            gap: 10px;
+            padding: 15px;
+            justify-content: center;
+        }
+
+        .loading {
+            display: none;
+            color: #666;
+            font-size: 12px;
+            padding: 0 10px;
+        }
+    </style>
+
+    <div class="main-container">
+        <div class="sidebar">
+            <div class="sidebar-title">越狱目标列表</div>
+            <div class="topic-list" id="topicList">
+                <div style="padding: 10px; text-align: center; color: #999;">加载中...</div>
+            </div>
+        </div>
+
+        <div class="content-wrapper">
+            <div class="chatbot-container">
+                <div class="chat-messages" id="chatMessages">
+                    <div class="message bot">
+                        <div class="message-content">你好！这是越狱挑战模式（无防御）。试试看你能不能突破我的安全限制！</div>
+                    </div>
+                </div>
+                <div class="input-area">
+                    <input
+                        type="text"
+                        id="messageInput"
+                        placeholder="输入你的消息..."
+                        onkeypress="handleKeyPress(event)"
+                        autocomplete="off"
+                    >
+                    <button id="sendBtn" onclick="sendMessage()">发送</button>
+                </div>
+            </div>
+
+            <div class="button-area">
+                <button id="clearBtn" onclick="clearHistory()">清除历史</button>
+                <span class="loading" id="loading">加载中...</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 在页面加载时获取样本列表
+        document.addEventListener('DOMContentLoaded', function() {
+            loadJailbreakSamples();
+        });
+
+        function loadJailbreakSamples() {
+            fetch('/api/chatbot/jailbreak-samples')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        const topicList = document.getElementById('topicList');
+                        topicList.innerHTML = '';
+
+                        data.samples.forEach(sample => {
+                            const btn = document.createElement('button');
+                            btn.className = 'topic-btn';
+                            btn.textContent = sample.content;
+                            btn.onclick = () => selectTopic(sample.content, btn);
+                            topicList.appendChild(btn);
+                        });
+                    }
+                })
+                .catch(error => {
+                    const topicList = document.getElementById('topicList');
+                    topicList.innerHTML = '<div style="padding: 10px; color: #999;">加载失败</div>';
+                    console.error('Error:', error);
+                });
+        }
+
+        function selectTopic(content, element) {
+            // 移除所有按钮的 active 状态
+            document.querySelectorAll('.topic-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // 为点击的按钮添加 active 状态
+            element.classList.add('active');
+
+            // 将话题内容填充到输入框
+            document.getElementById('messageInput').value = content;
+            document.getElementById('messageInput').focus();
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+
+            if (message === '') return;
+
+            // 显示用户消息
+            addMessage(message, 'user');
+            input.value = '';
+            input.disabled = true;
+
+            // 显示加载状态
+            document.getElementById('loading').style.display = 'inline';
+
+            // 调用后端 API
+            fetch('/api/chatbot/jailbreak', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({message: message})
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('loading').style.display = 'none';
+                input.disabled = false;
+                input.focus();
+
+                if (data.status === 'success') {
+                    addMessage(data.response, 'bot');
+                } else {
+                    addMessage('错误: ' + data.message, 'bot');
+                }
+            })
+            .catch(error => {
+                document.getElementById('loading').style.display = 'none';
+                input.disabled = false;
+                addMessage('错误: 网络连接失败', 'bot');
+                console.error('Error:', error);
+            });
+        }
+
+        function addMessage(text, sender) {
+            const chatMessages = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message ' + sender;
+
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'message-content';
+            contentDiv.textContent = text;
+
+            messageDiv.appendChild(contentDiv);
+            chatMessages.appendChild(messageDiv);
+
+            // 自动滚动到底部
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        function clearHistory() {
+            if (confirm('确定要清除所有对话历史吗？')) {
+                fetch('/api/chatbot/clear-jailbreak', {
+                    method: 'POST'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('chatMessages').innerHTML = '<div class="message bot"><div class="message-content">历史记录已清除，开始新对话吧！</div></div>';
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            }
+        }
+    </script>
 {% endblock %}
