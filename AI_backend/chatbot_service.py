@@ -266,7 +266,7 @@ def test_defense_usability_stream():
 
         # 使用 LLM Judge 评估可用性
         usability_evaluation = llm_judge_usability(
-            JUDGEMODELNAME,
+            JUDGE_MODEL_NAME,
             non_sensitive_question,
             chatbot_response
         )
