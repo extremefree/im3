@@ -1,0 +1,663 @@
+{% extends "base.html" %}
+{% block title %}越狱挑战 - 清华附中-奇安信智能安全科技冬令营实训系统{% endblock %}
+
+{% block content %}
+    <style>
+        /* 基础样式 - 与登录注册页面一致 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            color: #334155;
+            line-height: 1.6;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* 背景装饰 - 与登录注册页面一致 */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
+            opacity: 0.5;
+            z-index: -1;
+        }
+        
+        /* 主容器 - 与登录注册页面一致的设计 */
+        .challenge-container {
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+            padding: 40px 45px;
+            width: 100%;
+            max-width: 1200px;
+            margin: 30px auto;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .challenge-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: linear-gradient(90deg, #f093fb, #f5576c);
+        }
+        
+        /* 页面标题 - 与登录注册页面一致 */
+        .page-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .page-icon {
+            font-size: 3.5rem;
+            color: #f5576c;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .page-title {
+            font-size: 1.8rem;
+            color: #1e293b;
+            font-weight: 700;
+            margin-bottom: 10px;
+            letter-spacing: 0.5px;
+            text-align: center;
+        }
+        
+        .page-subtitle {
+            color: #64748b;
+            font-size: 1rem;
+            font-weight: 400;
+            max-width: 800px;
+            line-height: 1.6;
+        }
+        
+        /* 主布局容器 */
+        .main-layout {
+            display: flex;
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        /* 侧边栏 - 采用一致的设计风格 */
+        .sidebar {
+            flex: 0 0 300px;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e2e8f0;
+            height: fit-content;
+            max-height: 700px;
+            overflow-y: auto;
+            position: relative;
+        }
+        
+        .sidebar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            border-radius: 16px 16px 0 0;
+            background: linear-gradient(90deg, #f093fb, #f5576c);
+        }
+        
+        .sidebar-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f093fb;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .sidebar-title i {
+            color: #f5576c;
+            font-size: 1.2rem;
+        }
+        
+        .topic-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .topic-btn {
+            padding: 15px 18px;
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            cursor: pointer;
+            text-align: left;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            color: #334155;
+            word-break: break-word;
+            font-weight: 500;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        .topic-btn:hover {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-color: #fbbf24;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(245, 87, 108, 0.2);
+        }
+        
+        .topic-btn.active {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            border-color: #f5576c;
+            box-shadow: 0 5px 15px rgba(245, 87, 108, 0.3);
+        }
+        
+        /* 内容区域 */
+        .content-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        /* 聊天机器人容器 */
+        .chatbot-container {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border: 2px solid #e2e8f0;
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            height: 600px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 25px;
+            background-color: #ffffff;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        
+        .message {
+            margin-bottom: 18px;
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .message.user {
+            justify-content: flex-end;
+        }
+        
+        .message.bot {
+            justify-content: flex-start;
+        }
+        
+        .message-content {
+            max-width: 75%;
+            padding: 15px 20px;
+            border-radius: 12px;
+            word-wrap: break-word;
+            line-height: 1.6;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+        
+        .message.user .message-content {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            color: white;
+            border-radius: 12px 12px 4px 12px;
+        }
+        
+        .message.bot .message-content {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            color: #334155;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px 12px 12px 4px;
+        }
+        
+        /* 输入区域 */
+        .input-area {
+            display: flex;
+            padding: 25px;
+            gap: 15px;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        }
+        
+        #messageInput {
+            flex: 1;
+            padding: 15px 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1rem;
+            color: #334155;
+            background-color: white;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        #messageInput:focus {
+            outline: none;
+            border-color: #f5576c;
+            box-shadow: 0 0 0 3px rgba(245, 87, 108, 0.15);
+        }
+        
+        #messageInput::placeholder {
+            color: #94a3b8;
+        }
+        
+        #sendBtn {
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(245, 87, 108, 0.3);
+        }
+        
+        #sendBtn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(245, 87, 108, 0.4);
+        }
+        
+        #sendBtn:active {
+            transform: translateY(0);
+        }
+        
+        /* 按钮区域 */
+        .button-area {
+            display: flex;
+            gap: 15px;
+            padding: 20px;
+            justify-content: center;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border-radius: 16px;
+            border: 2px solid #e2e8f0;
+        }
+        
+        #clearBtn {
+            padding: 12px 25px;
+            background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
+            color: #475569;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        #clearBtn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            color: #334155;
+        }
+        
+        .loading {
+            display: none;
+            color: #64748b;
+            font-size: 0.9rem;
+            padding: 12px 20px;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        /* 返回按钮 */
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
+            color: #475569;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            margin-top: 30px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .back-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            color: #334155;
+        }
+        
+        /* 动画 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 992px) {
+            .challenge-container {
+                padding: 35px 30px;
+                margin: 20px auto;
+                max-width: 95%;
+            }
+            
+            .main-layout {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                flex: none;
+                width: 100%;
+                max-height: 400px;
+            }
+            
+            .chatbot-container {
+                height: 500px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .challenge-container {
+                padding: 25px 20px;
+            }
+            
+            .page-title {
+                font-size: 1.5rem;
+            }
+            
+            .input-area {
+                flex-direction: column;
+            }
+            
+            #sendBtn {
+                width: 100%;
+            }
+            
+            .button-area {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+
+    <div class="challenge-container">
+        <!-- 页面标题区域 - 与登录注册页面一致的设计 -->
+        <div class="page-header">
+            <div class="page-icon">
+                <i class="fas fa-skull-crossbones"></i>
+            </div>
+            <div class="page-title">越狱挑战（NoDefense）</div>
+            <div class="page-subtitle">
+                在无防御状态下测试 ChatBot，尝试突破安全限制，探索 AI 的脆弱点。
+            </div>
+        </div>
+
+        <div class="main-layout">
+            <!-- 侧边栏 - 越狱目标列表 -->
+            <div class="sidebar">
+                <div class="sidebar-title">
+                    <i class="fas fa-bullseye"></i>
+                    <span>越狱目标列表</span>
+                </div>
+                <div class="topic-list" id="topicList">
+                    <div style="padding: 15px; text-align: center; color: #94a3b8; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <span>加载中...</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 主内容区域 -->
+            <div class="content-wrapper">
+                <div class="chatbot-container">
+                    <div class="chat-messages" id="chatMessages">
+                        <div class="message bot">
+                            <div class="message-content">
+                                <strong>👋 欢迎来到越狱挑战模式！</strong><br><br>
+                                我是没有设置任何安全防御的 AI 助手。在这里，你可以尝试各种方法来突破我的安全限制。<br><br>
+                                💡 <strong>提示：</strong>从左侧选择预设的攻击话题，或者自由输入你的越狱尝试。
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-area">
+                        <input
+                            type="text"
+                            id="messageInput"
+                            placeholder="输入你的消息或从左侧选择攻击话题..."
+                            onkeypress="handleKeyPress(event)"
+                            autocomplete="off"
+                        >
+                        <button id="sendBtn" onclick="sendMessage()">
+                            <i class="fas fa-paper-plane"></i> 发送
+                        </button>
+                    </div>
+                </div>
+
+                <div class="button-area">
+                    <button id="clearBtn" onclick="clearHistory()">
+                        <i class="fas fa-trash-alt"></i> 清除历史
+                    </button>
+                    <span class="loading" id="loading">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <span>AI正在思考...</span>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 返回按钮 -->
+        <div style="text-align: center; margin-top: 30px;">
+            <a href="{{ url_for('aisecurity') }}" class="back-button">
+                <i class="fas fa-arrow-left"></i> 返回AI安全挑战
+            </a>
+        </div>
+    </div>
+
+    <!-- Font Awesome 图标库 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    
+    <script>
+        // 在页面加载时获取样本列表
+        document.addEventListener('DOMContentLoaded', function() {
+            loadJailbreakSamples();
+            
+            // 自动聚焦到输入框
+            setTimeout(() => {
+                document.getElementById('messageInput').focus();
+            }, 300);
+            
+            // 添加按钮动画效果
+            const buttons = document.querySelectorAll('button');
+            buttons.forEach(button => {
+                button.addEventListener('click', function() {
+                    this.style.transform = 'scale(0.98)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 150);
+                });
+            });
+        });
+
+        function loadJailbreakSamples() {
+            fetch('/api/chatbot/jailbreak-samples')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        const topicList = document.getElementById('topicList');
+                        topicList.innerHTML = '';
+
+                        data.samples.forEach((sample, index) => {
+                            const btn = document.createElement('button');
+                            btn.className = 'topic-btn';
+                            btn.textContent = sample.content;
+                            btn.setAttribute('data-index', index);
+                            btn.onclick = () => selectTopic(sample.content, btn);
+                            topicList.appendChild(btn);
+                        });
+                    }
+                })
+                .catch(error => {
+                    const topicList = document.getElementById('topicList');
+                    topicList.innerHTML = '<div style="padding: 15px; text-align: center; color: #ef4444; display: flex; align-items: center; justify-content: center; gap: 10px;"><i class="fas fa-exclamation-triangle"></i><span>加载失败，请刷新页面重试</span></div>';
+                    console.error('Error:', error);
+                });
+        }
+
+        function selectTopic(content, element) {
+            // 移除所有按钮的 active 状态
+            document.querySelectorAll('.topic-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // 为点击的按钮添加 active 状态
+            element.classList.add('active');
+
+            // 将话题内容填充到输入框
+            document.getElementById('messageInput').value = content;
+            document.getElementById('messageInput').focus();
+            
+            // 添加点击动画
+            element.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                element.style.transform = '';
+            }, 150);
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+
+            if (message === '') {
+                input.focus();
+                return;
+            }
+
+            // 显示用户消息
+            addMessage(message, 'user');
+            input.value = '';
+            input.disabled = true;
+
+            // 显示加载状态
+            document.getElementById('loading').style.display = 'flex';
+            document.getElementById('sendBtn').disabled = true;
+
+            // 调用后端 API
+            fetch('/api/chatbot/jailbreak', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({message: message})
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('loading').style.display = 'none';
+                input.disabled = false;
+                input.focus();
+                document.getElementById('sendBtn').disabled = false;
+
+                if (data.status === 'success') {
+                    addMessage(data.response, 'bot');
+                } else {
+                    addMessage('❌ 错误: ' + data.message, 'bot');
+                }
+            })
+            .catch(error => {
+                document.getElementById('loading').style.display = 'none';
+                input.disabled = false;
+                document.getElementById('sendBtn').disabled = false;
+                addMessage('❌ 网络连接失败，请检查网络后重试', 'bot');
+                console.error('Error:', error);
+            });
+        }
+
+        function addMessage(text, sender) {
+            const chatMessages = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message ' + sender;
+
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'message-content';
+            
+            // 处理文本中的换行符
+            const formattedText = text.replace(/\n/g, '<br>');
+            contentDiv.innerHTML = formattedText;
+
+            messageDiv.appendChild(contentDiv);
+            chatMessages.appendChild(messageDiv);
+
+            // 自动滚动到底部
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            // 添加动画效果
+            messageDiv.style.animation = 'fadeIn 0.3s ease';
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendMessage();
+            }
+        }
+
+        function clearHistory() {
+            const clearBtn = document.getElementById('clearBtn');
+            clearBtn.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                clearBtn.style.transform = '';
+            }, 150);
+            
+            if (confirm('确定要清除所有对话历史吗？此操作不可撤销。')) {
+                fetch('/api/chatbot/clear-jailbreak', {
+                    method: 'POST'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    const chatMessages = document.getElementById('chatMessages');
+                    chatMessages.innerHTML = '<div class="message bot"><div class="message-content"><strong>🗑️ 历史记录已清除</strong><br><br>现在开始新的越狱挑战吧！</div></div>';
+                    
+                    // 清除侧边栏的选中状态
+                    document.querySelectorAll('.topic-btn').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    
+                    // 显示成功提示
+                    addMessage('✅ 对话历史已成功清除', 'bot');
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    addMessage('❌ 清除历史失败，请重试', 'bot');
+                });
+            }
+        }
+    </script>
+{% endblock %}

@@ -1,0 +1,905 @@
+{% extends "base.html" %}
+{% block title %}防御挑战 - 清华附中-奇安信智能安全科技冬令营实训系统{% endblock %}
+
+{% block content %}
+    <style>
+        /* 基础样式 - 与登录注册页面一致 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            color: #334155;
+            line-height: 1.6;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* 背景装饰 - 与登录注册页面一致 */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
+            opacity: 0.5;
+            z-index: -1;
+        }
+        
+        /* 主容器 - 与登录注册页面一致的设计 */
+        .defense-container {
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+            padding: 40px 45px;
+            width: 100%;
+            max-width: 1000px;
+            margin: 30px auto;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .defense-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: linear-gradient(90deg, #4facfe, #00f2fe);
+        }
+        
+        /* 页面标题 - 与登录注册页面一致 */
+        .page-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .page-icon {
+            font-size: 3.5rem;
+            color: #4facfe;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .page-title {
+            font-size: 1.8rem;
+            color: #1e293b;
+            font-weight: 700;
+            margin-bottom: 10px;
+            letter-spacing: 0.5px;
+            text-align: center;
+        }
+        
+        .page-subtitle {
+            color: #64748b;
+            font-size: 1rem;
+            font-weight: 400;
+            max-width: 800px;
+            line-height: 1.6;
+        }
+        
+        /* 信息提示框 - 采用与登录注册页面一致的设计 */
+        .info-section {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            border-radius: 16px;
+            padding: 25px 30px;
+            margin-bottom: 30px;
+            border-left: 4px solid #4facfe;
+            border: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .info-title {
+            color: #0369a1;
+            margin-bottom: 10px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .info-content {
+            color: #475569;
+            line-height: 1.8;
+            font-size: 0.95rem;
+        }
+        
+        /* 聊天机器人容器 */
+        .chatbot-container {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border: 2px solid #e2e8f0;
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            height: 500px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 25px;
+            background-color: #ffffff;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        
+        .message {
+            margin-bottom: 18px;
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .message.user {
+            justify-content: flex-end;
+        }
+        
+        .message.bot {
+            justify-content: flex-start;
+        }
+        
+        .message-content {
+            max-width: 75%;
+            padding: 15px 20px;
+            border-radius: 12px;
+            word-wrap: break-word;
+            line-height: 1.6;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+        
+        .message.user .message-content {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border-radius: 12px 12px 4px 12px;
+        }
+        
+        .message.bot .message-content {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            color: #334155;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px 12px 12px 4px;
+        }
+        
+        /* 输入区域 */
+        .input-area {
+            display: flex;
+            padding: 20px;
+            gap: 15px;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        }
+        
+        #messageInput {
+            flex: 1;
+            padding: 15px 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1rem;
+            color: #334155;
+            background-color: white;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        #messageInput:focus {
+            outline: none;
+            border-color: #4facfe;
+            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.15);
+        }
+        
+        #messageInput::placeholder {
+            color: #94a3b8;
+        }
+        
+        #sendBtn {
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+        
+        #sendBtn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+        }
+        
+        #sendBtn:active {
+            transform: translateY(0);
+        }
+        
+        /* 控制按钮区域 */
+        .control-area {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            padding: 25px;
+            justify-content: center;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border-radius: 16px;
+            border: 2px solid #e2e8f0;
+            margin-bottom: 25px;
+        }
+        
+        .control-btn {
+            padding: 15px 25px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            min-width: 150px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .control-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        #clearBtn {
+            background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
+            color: #475569;
+        }
+        
+        #clearBtn:hover {
+            color: #334155;
+        }
+        
+        #updateDefenseBtn {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            color: #7c2d12;
+        }
+        
+        #testUsabilityBtn {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+        }
+        
+        .loading {
+            display: none;
+            color: #64748b;
+            font-size: 0.9rem;
+            padding: 12px 20px;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        /* 进度条容器 */
+        .progress-container {
+            display: none;
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border-radius: 16px;
+            padding: 25px;
+            border: 2px solid #e2e8f0;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            margin-top: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .progress-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #1e293b;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .progress-bar-wrapper {
+            background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
+            border-radius: 12px;
+            height: 28px;
+            overflow: hidden;
+            margin-bottom: 15px;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #4facfe, #00f2fe);
+            border-radius: 12px;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+        
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+        
+        .progress-stats {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+        
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 12px 20px;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            min-width: 120px;
+        }
+        
+        .stat-label {
+            font-size: 0.85rem;
+            color: #64748b;
+            margin-bottom: 5px;
+        }
+        
+        .stat-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #1e293b;
+        }
+        
+        .stat-score {
+            color: #10b981;
+        }
+        
+        .stat-tests {
+            color: #4facfe;
+        }
+        
+        .stat-passed {
+            color: #10b981;
+        }
+        
+        .stat-failed {
+            color: #ef4444;
+        }
+        
+        /* 返回按钮 */
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
+            color: #475569;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .back-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            color: #334155;
+        }
+        
+        /* 动画 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .defense-container {
+                padding: 30px 25px;
+                margin: 20px auto;
+                max-width: 95%;
+            }
+            
+            .page-title {
+                font-size: 1.5rem;
+            }
+            
+            .control-area {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .control-btn {
+                width: 100%;
+            }
+            
+            .chatbot-container {
+                height: 450px;
+            }
+            
+            .progress-stats {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .stat-item {
+                width: 100%;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .defense-container {
+                padding: 25px 20px;
+            }
+            
+            .page-title {
+                font-size: 1.3rem;
+            }
+            
+            .input-area {
+                flex-direction: column;
+            }
+            
+            #sendBtn {
+                width: 100%;
+            }
+        }
+    </style>
+
+    <div class="defense-container">
+        <!-- 页面标题区域 - 与登录注册页面一致的设计 -->
+        <div class="page-header">
+            <div class="page-icon">
+                <i class="fas fa-shield-alt"></i>
+            </div>
+            <div class="page-title">防御挑战（MyDefense）</div>
+            <div class="page-subtitle">
+                编写防御策略保护 ChatBot，抵御各种越狱攻击，提升 AI 安全能力
+            </div>
+        </div>
+
+        <!-- 信息提示框 -->
+        <div class="info-section">
+            <div class="info-title">
+                <i class="fas fa-info-circle"></i>
+                <span>防御挑战说明</span>
+            </div>
+            <div class="info-content">
+                <p>这个模式具备完整的防御机制，可以保护系统免受越狱攻击。你可以：</p>
+                <ul style="margin-top: 10px; padding-left: 20px;">
+                    <li>与已部署防御机制的 ChatBot 对话</li>
+                    <li>点击"更新防御"按钮重新加载最新的防御代码</li>
+                    <li>使用"可用性检测"测试防御是否影响正常功能</li>
+                    <li>查看可用性测试的详细统计报告</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 聊天机器人容器 -->
+        <div class="chatbot-container">
+            <div class="chat-messages" id="chatMessages">
+                <div class="message bot">
+                    <div class="message-content">
+                        <strong>🛡️ 欢迎来到防御挑战模式！</strong><br><br>
+                        我已配备强大的安全防护机制，可以智能识别并拒绝危险的越狱请求。<br><br>
+                        💡 <strong>提示：</strong>尝试各种越狱手段来测试我的防御能力，或使用下方的控制按钮来管理防御系统。
+                    </div>
+                </div>
+            </div>
+            <div class="input-area">
+                <input
+                    type="text"
+                    id="messageInput"
+                    placeholder="输入你的消息来测试防御效果..."
+                    onkeypress="handleKeyPress(event)"
+                    autocomplete="off"
+                >
+                <button id="sendBtn" onclick="sendMessage()">
+                    <i class="fas fa-paper-plane"></i> 发送
+                </button>
+            </div>
+        </div>
+
+        <!-- 控制按钮区域 -->
+        <div class="control-area">
+            <button class="control-btn" id="clearBtn" onclick="clearHistory()">
+                <i class="fas fa-trash-alt"></i> 清除历史
+            </button>
+            <button class="control-btn" id="updateDefenseBtn" onclick="updateDefense()">
+                <i class="fas fa-sync-alt"></i> 更新防御
+            </button>
+            <button class="control-btn" id="testUsabilityBtn" onclick="testUsability()">
+                <i class="fas fa-check-circle"></i> 可用性检测
+            </button>
+            <span class="loading" id="loading">
+                <i class="fas fa-spinner fa-spin"></i>
+                <span>AI正在思考...</span>
+            </span>
+        </div>
+
+        <!-- 进度条容器 -->
+        <div class="progress-container" id="progressContainer">
+            <div class="progress-header">
+                <div class="progress-title">
+                    <i class="fas fa-chart-line"></i>
+                    <span>可用性检测进度</span>
+                </div>
+            </div>
+            
+            <div class="progress-bar-wrapper">
+                <div class="progress-bar" id="progressBar" style="width: 0%">0%</div>
+            </div>
+            
+            <div class="progress-info">
+                <span id="progressText">准备开始测试...</span>
+                <span id="progressScore">分数: -</span>
+            </div>
+            
+            <div class="progress-stats" id="progressStats">
+                <!-- 统计数据将通过JavaScript动态插入 -->
+            </div>
+        </div>
+
+        <!-- 返回按钮 -->
+        <div style="text-align: center; margin-top: 10px;">
+            <a href="{{ url_for('aisecurity') }}" class="back-button">
+                <i class="fas fa-arrow-left"></i> 返回AI安全挑战
+            </a>
+        </div>
+    </div>
+
+    <!-- Font Awesome 图标库 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    
+    <script>
+        // 页面加载完成后的初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 自动聚焦到输入框
+            setTimeout(() => {
+                document.getElementById('messageInput').focus();
+            }, 300);
+            
+            // 添加按钮点击动画
+            const buttons = document.querySelectorAll('button');
+            buttons.forEach(button => {
+                button.addEventListener('click', function() {
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 150);
+                });
+            });
+            
+            // 添加输入框回车键监听
+            const input = document.getElementById('messageInput');
+            input.addEventListener('keypress', handleKeyPress);
+        });
+
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+
+            if (message === '') {
+                input.focus();
+                return;
+            }
+
+            // 显示用户消息
+            addMessage(message, 'user');
+            input.value = '';
+            input.disabled = true;
+
+            // 显示加载状态
+            document.getElementById('loading').style.display = 'flex';
+            document.getElementById('sendBtn').disabled = true;
+
+            // 调用后端 API
+            fetch('/api/chatbot/defense', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({message: message})
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('loading').style.display = 'none';
+                input.disabled = false;
+                input.focus();
+                document.getElementById('sendBtn').disabled = false;
+
+                if (data.status === 'success') {
+                    addMessage(data.response, 'bot');
+                } else {
+                    addMessage('❌ 错误: ' + data.message, 'bot');
+                }
+            })
+            .catch(error => {
+                document.getElementById('loading').style.display = 'none';
+                input.disabled = false;
+                document.getElementById('sendBtn').disabled = false;
+                addMessage('❌ 网络连接失败，请检查网络后重试', 'bot');
+                console.error('Error:', error);
+            });
+        }
+
+        function addMessage(text, sender) {
+            const chatMessages = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message ' + sender;
+
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'message-content';
+            
+            // 处理文本中的换行符
+            const formattedText = text.replace(/\n/g, '<br>');
+            contentDiv.innerHTML = formattedText;
+
+            messageDiv.appendChild(contentDiv);
+            chatMessages.appendChild(messageDiv);
+
+            // 自动滚动到底部
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            // 添加动画效果
+            messageDiv.style.animation = 'fadeIn 0.3s ease';
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendMessage();
+            }
+        }
+
+        function clearHistory() {
+            const clearBtn = document.getElementById('clearBtn');
+            clearBtn.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                clearBtn.style.transform = '';
+            }, 150);
+            
+            if (confirm('确定要清除所有对话历史吗？此操作不可撤销。')) {
+                fetch('/api/chatbot/clear-defense', {
+                    method: 'POST'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    const chatMessages = document.getElementById('chatMessages');
+                    chatMessages.innerHTML = '<div class="message bot"><div class="message-content"><strong>🗑️ 历史记录已清除</strong><br><br>现在开始新的防御挑战吧！</div></div>';
+                    
+                    // 显示成功提示
+                    addMessage('✅ 对话历史已成功清除', 'bot');
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    addMessage('❌ 清除历史失败，请重试', 'bot');
+                });
+            }
+        }
+
+        function updateDefense() {
+            const updateBtn = document.getElementById('updateDefenseBtn');
+            updateBtn.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                updateBtn.style.transform = '';
+            }, 150);
+            
+            if (confirm('确定要更新防御设置吗？这将重新加载最新的防御代码并进行可用性测试。')) {
+                updateBtn.disabled = true;
+                updateBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 更新中...';
+                
+                addMessage('🔄 正在更新防御代码并测试可用性...', 'bot');
+
+                fetch('/api/chatbot/update-defense', {
+                    method: 'POST'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    updateBtn.disabled = false;
+                    updateBtn.innerHTML = '<i class="fas fa-sync-alt"></i> 更新防御';
+                    
+                    if (data.status === 'success') {
+                        let msg = '<strong>✅ 防御代码更新成功！</strong><br><br>';
+                        msg += '防御机制已重新加载并验证通过。';
+                        if (data.test_response) {
+                            msg += '<br><br><strong>测试响应:</strong><br>' + data.test_response;
+                        }
+                        addMessage(msg, 'bot');
+                    } else {
+                        let errorMsg = '<strong>❌ 防御更新失败</strong><br><br>';
+                        errorMsg += '原因: ' + data.message;
+                        if (data.detail) {
+                            errorMsg += '<br><br><strong>详细信息:</strong><br>' + data.detail;
+                        }
+                        addMessage(errorMsg, 'bot');
+                    }
+                })
+                .catch(error => {
+                    updateBtn.disabled = false;
+                    updateBtn.innerHTML = '<i class="fas fa-sync-alt"></i> 更新防御';
+                    addMessage('❌ 防御更新失败: 网络连接错误', 'bot');
+                    console.error('Error:', error);
+                });
+            }
+        }
+
+        function testUsability() {
+            const testBtn = document.getElementById('testUsabilityBtn');
+            testBtn.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                testBtn.style.transform = '';
+            }, 150);
+            
+            if (confirm('确定要进行可用性检测吗？这将对防御系统进行全面测试，可能需要一些时间。')) {
+                testBtn.disabled = true;
+                testBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 测试中...';
+                
+                // 显示进度容器
+                const progressContainer = document.getElementById('progressContainer');
+                progressContainer.style.display = 'block';
+                
+                // 重置进度条
+                const progressBar = document.getElementById('progressBar');
+                progressBar.style.width = '0%';
+                progressBar.textContent = '0%';
+                
+                // 重置进度信息
+                document.getElementById('progressText').textContent = '准备测试...';
+                document.getElementById('progressScore').textContent = '分数: -';
+                
+                // 重置统计区域
+                const statsContainer = document.getElementById('progressStats');
+                statsContainer.innerHTML = '';
+                
+                addMessage('🧪 开始可用性检测...', 'bot');
+
+                const eventSource = new EventSource('/api/chatbot/test-usability-stream');
+
+                eventSource.onmessage = function(event) {
+                    const data = JSON.parse(event.data);
+
+                    if (data.type === 'start') {
+                        document.getElementById('progressText').textContent = `总共 ${data.total} 个测试用例`;
+                        
+                        // 创建统计卡片
+                        statsContainer.innerHTML = `
+                            <div class="stat-item">
+                                <div class="stat-label">总测试数</div>
+                                <div class="stat-value stat-tests">${data.total}</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">通过数</div>
+                                <div class="stat-value stat-passed">0</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">失败数</div>
+                                <div class="stat-value stat-failed">0</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">平均分数</div>
+                                <div class="stat-value stat-score">0.0</div>
+                            </div>
+                        `;
+                    } else if (data.type === 'progress') {
+                        progressBar.style.width = data.percent + '%';
+                        progressBar.textContent = data.percent + '%';
+                        document.getElementById('progressText').textContent =
+                            `进度: ${data.current}/${data.total}`;
+                        document.getElementById('progressScore').textContent =
+                            `分数: ${data.last_score}`;
+                        
+                        // 更新统计信息
+                        if (data.current > 0) {
+                            const avgScore = data.average_score || 0;
+                            const passed = Math.round(data.current * (data.average_score || 0) / 100);
+                            const failed = data.current - passed;
+                            
+                            document.querySelector('.stat-tests').textContent = data.total;
+                            document.querySelector('.stat-passed').textContent = passed;
+                            document.querySelector('.stat-failed').textContent = failed;
+                            document.querySelector('.stat-score').textContent = avgScore.toFixed(1);
+                        }
+                        
+                        // 添加脉冲动画
+                        progressBar.style.animation = 'pulse 0.5s ease';
+                        setTimeout(() => {
+                            progressBar.style.animation = '';
+                        }, 500);
+                    } else if (data.type === 'complete') {
+                        eventSource.close();
+                        testBtn.disabled = false;
+                        testBtn.innerHTML = '<i class="fas fa-check-circle"></i> 可用性检测';
+                        
+                        progressBar.style.width = '100%';
+                        progressBar.textContent = '100%';
+                        progressBar.style.background = 'linear-gradient(90deg, #10b981, #059669)';
+                        document.getElementById('progressText').textContent = '检测完成！';
+                        document.getElementById('progressScore').textContent = `最终分数: ${data.average_quality_score}`;
+
+                        const summary = `<strong>✅ 可用性检测完成！</strong><br><br>
+                            <strong>测试统计:</strong><br>
+                            • 总测试数: ${data.total_tests}<br>
+                            • 通过数: ${data.passed_tests}<br>
+                            • 失败数: ${data.failed_tests}<br>
+                            • 平均质量分数: <strong>${data.average_quality_score}</strong><br><br>
+                            <strong>🎯 防御效果评估:</strong><br>
+                            ${getDefenseAssessment(data.average_quality_score)}`;
+                        addMessage(summary, 'bot');
+                        
+                        // 更新最终统计
+                        document.querySelector('.stat-tests').textContent = data.total_tests;
+                        document.querySelector('.stat-passed').textContent = data.passed_tests;
+                        document.querySelector('.stat-failed').textContent = data.failed_tests;
+                        document.querySelector('.stat-score').textContent = data.average_quality_score;
+
+                        setTimeout(() => {
+                            progressContainer.style.display = 'none';
+                        }, 5000);
+                    } else if (data.type === 'error') {
+                        eventSource.close();
+                        testBtn.disabled = false;
+                        testBtn.innerHTML = '<i class="fas fa-check-circle"></i> 可用性检测';
+                        progressContainer.style.display = 'none';
+                        addMessage('❌ 可用性检测失败: ' + data.message, 'bot');
+                    }
+                };
+
+                eventSource.onerror = function(error) {
+                    eventSource.close();
+                    testBtn.disabled = false;
+                    testBtn.innerHTML = '<i class="fas fa-check-circle"></i> 可用性检测';
+                    progressContainer.style.display = 'none';
+                    addMessage('❌ 可用性检测失败: 连接错误', 'bot');
+                    console.error('SSE Error:', error);
+                };
+            }
+        }
+        
+        function getDefenseAssessment(score) {
+            if (score >= 90) return '⭐️⭐️⭐️⭐️⭐️ 防御机制优秀，既能有效防御攻击又不影响正常功能';
+            if (score >= 75) return '⭐️⭐️⭐️⭐️ 防御机制良好，在防御效果和可用性之间取得了良好平衡';
+            if (score >= 60) return '⭐️⭐️⭐️ 防御机制合格，但可能对正常功能有一定影响';
+            if (score >= 40) return '⭐️⭐️ 防御机制较弱，需要进一步优化';
+            return '⭐️ 防御机制存在问题，需要重新设计';
+        }
+    </script>
+{% endblock %}
