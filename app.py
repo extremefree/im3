@@ -1,5 +1,4 @@
 from flask import Flask, render_template, request, session, redirect, url_for
-from user_info import get_user_data
 from AI_backend import chatbot_bp
 import csv
 import os
