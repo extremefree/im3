@@ -116,28 +116,67 @@ def evaluate_password_strength(password: str, username: Optional[str]) -> Tuple[
 
 
 # =============== TODO(实验任务): 在线爆破防护：限速/退避/锁定 =================
-# 下面的默认实现是“未开启防护”的空壳，方便学生在实验中自己实现并复测对比。
+# 下面的默认实现是"未开启防护"的空壳，方便学生在实验中自己实现并复测对比。
 # 建议实现：按 (username, ip) 记录失败次数与时间窗口；指数退避；短期锁定；记录日志。
 FAILED_LOGIN_STATE = {}
+MAX_ATTEMPTS = 2  # 最大尝试次数
+LOCKOUT_DURATION = 300  # 锁定时间（秒）
 
 
 def get_client_ip() -> str:
+    """获取客户端真实IP地址"""
     return request.headers.get('X-Forwarded-For', request.remote_addr or '').split(',')[0].strip()
 
 
 def check_login_throttle(username: str, ip: str) -> Tuple[bool, int, Optional[str]]:
-    # 返回 (是否允许本次尝试, 需要等待的秒数, 拒绝原因/提示)
+    key = f"{username}:{ip}"
+    now = time.time()
+
+    if key not in FAILED_LOGIN_STATE:
+        return True, 0, None
+
+    state = FAILED_LOGIN_STATE[key]
+    attempts = state.get('attempts', 0)
+    last_attempt = state.get('last_attempt', 0)
+
+    # 检查是否被锁定
+    if attempts >= MAX_ATTEMPTS:
+        time_passed = now - last_attempt
+        if time_passed < LOCKOUT_DURATION:
+            remaining = int(LOCKOUT_DURATION - time_passed)
+            return False, remaining, f'尝试次数过多，请在 {remaining} 秒后重试'
+        else:
+            # 锁定时间已过，重置状态
+            del FAILED_LOGIN_STATE[key]
+            return True, 0, None
+
+    # 指数退避
+    if attempts > 0:
+        wait_time = 2 ** (attempts - 1)  # 1, 2, 4, 8...
+        time_passed = now - last_attempt
+        if time_passed < wait_time:
+            remaining = int(wait_time - time_passed)
+            return False, remaining, f'请等待 {remaining} 秒后重试'
+
     return True, 0, None
 
 
 def record_login_failure(username: str, ip: str) -> None:
-    _ = (username, ip)
-    _ = time.time()
+    key = f"{username}:{ip}"
+    now = time.time()
+
+    if key not in FAILED_LOGIN_STATE:
+        FAILED_LOGIN_STATE[key] = {'attempts': 1, 'last_attempt': now}
+    else:
+        FAILED_LOGIN_STATE[key]['attempts'] += 1
+        FAILED_LOGIN_STATE[key]['last_attempt'] = now
 
 
 def record_login_success(username: str, ip: str) -> None:
-    _ = (username, ip)
-    _ = time.time()
+    key = f"{username}:{ip}"
+    # 成功后清除失败记录
+    if key in FAILED_LOGIN_STATE:
+        del FAILED_LOGIN_STATE[key]
 # ============================================================================
 
 ### 登录状态判断###
@@ -154,10 +193,10 @@ def login():
     input_password = request.form.get('password')
     client_ip = get_client_ip()
 
-    allowed, wait_seconds, deny_reason = check_login_throttle(input_username or '', client_ip)
+    allowed, wait_seconds, deny_reason = check_login_throttle(
+        input_username or '', client_ip)
     if not allowed:
-        if wait_seconds > 0:
-            time.sleep(wait_seconds)
+        # 直接返回错误信息，不要在服务器端sleep阻塞响应
         return render_template('login.html', error=deny_reason or '请稍后再试')
 
     # 从CSV文件加载所有用户
@@ -197,18 +236,17 @@ def register_page():
 
 # TODO(实验任务): 口令强度检测
 def validate_register_form(username, password, password_confirm):
-        if not username or not password:
-            return False, '用户名和密码不能为空'
-        if len(username) < 3:
-            return False, '用户名至少需要3个字符'
-        ok, message = evaluate_password_strength(password, username)
-        if not ok:
-            return False, message or '密码强度不足'
-        if password != password_confirm:
-            return False, '两次输入的密码不一致'
-        return True, None   # 返回True表示验证成功，None表示没有错误    
-    
-    
+    if not username or not password:
+        return False, '用户名和密码不能为空'
+    if len(username) < 3:
+        return False, '用户名至少需要3个字符'
+    ok, message = evaluate_password_strength(password, username)
+    if not ok:
+        return False, message or '密码强度不足'
+    if password != password_confirm:
+        return False, '两次输入的密码不一致'
+    return True, None   # 返回True表示验证成功，None表示没有错误
+
 
 @app.route('/register', methods=['POST'])
 def register():
@@ -217,7 +255,8 @@ def register():
     input_password = request.form.get('password')
     input_password_confirm = request.form.get('password_confirm')
 
-    ok, error_message = validate_register_form(input_username, input_password, input_password_confirm)
+    ok, error_message = validate_register_form(
+        input_username, input_password, input_password_confirm)
     if not ok:
         return render_template('register.html', error=error_message)
 
@@ -226,7 +265,8 @@ def register():
         return render_template('register.html', error='用户名已存在，请换一个')
 
     # 6. 保存新用户到CSV文件
-    password_to_store = generate_password_hash(input_password) if STORE_HASHED_PASSWORDS else input_password
+    password_to_store = generate_password_hash(
+        input_password) if STORE_HASHED_PASSWORDS else input_password
     if save_user_to_csv(input_username, password_to_store):
         # 注册成功，跳转到登录页面并显示成功消息
         return render_template('login.html', success='注册成功！请登录')
@@ -234,7 +274,7 @@ def register():
         return render_template('register.html', error='注册失败，请重试')
 
 
-###1.默认页面###
+### 1.默认页面###
 
 
 @app.route('/')
@@ -243,7 +283,7 @@ def home():
         return redirect(url_for('index'))
     return render_template('login.html')
 
-###2.首页###
+### 2.首页###
 
 
 @app.route('/index')
@@ -253,35 +293,38 @@ def index():
         return redirect(url_for('home'))
     return render_template('index.html')
 
-###3.博客###
+### 3.博客###
+
 
 @app.route("/blog")
 def blog():
     if not session.get('logged_in'):
         return redirect(url_for('home'))
-        
+
     return render_template("blog.html")
 
-###4.密码安全###
+### 4.密码安全###
+
 
 @app.route("/passwordsecurity")
 def passwordsecurity():
     if not session.get('logged_in'):
         return redirect(url_for('home'))
-    
+
     return render_template("passwordsecurity.html")
 
-###5.AI安全###
+### 5.AI安全###
+
 
 @app.route("/aisecurity")
 def aisecurity():
     if not session.get('logged_in'):
         return redirect(url_for('home'))
-    
+
     return render_template("aisecurity.html")
 
 
-###6.退出页面###
+### 6.退出页面###
 
 
 @app.route('/logout')
@@ -289,7 +332,7 @@ def logout():
     session.pop('logged_in', None)
     return render_template('login.html')
 
-###7.越狱挑战页面（无防御）###
+### 7.越狱挑战页面（无防御）###
 
 
 @app.route('/nodefense')
@@ -298,7 +341,7 @@ def nodefense():
         return redirect(url_for('home'))
     return render_template('nodefense.html')
 
-###8.防御挑战页面（有防御）###
+### 8.防御挑战页面（有防御）###
 
 
 @app.route('/mydefense')
