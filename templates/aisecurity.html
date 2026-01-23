@@ -1,0 +1,398 @@
+{% extends "base.html" %}
+{% block title %}AI安全 - 清华附中-奇安信智能安全科技冬令营实训系统{% endblock %}
+
+{% block content %}
+    <style>
+        /* 与登录注册页面一致的全局样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            color: #334155;
+            line-height: 1.6;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* 背景装饰 - 与登录注册页面一致 */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
+            opacity: 0.5;
+            z-index: -1;
+        }
+        
+        /* 主容器 - 与登录注册页面一致的设计 */
+        .ai-security-container {
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+            padding: 50px 45px;
+            width: 100%;
+            max-width: 1000px;
+            margin: 30px auto;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .ai-security-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6, #10b981);
+        }
+        
+        /* 页面标题 - 与登录注册页面一致 */
+        .page-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+        
+        .page-icon {
+            font-size: 3.5rem;
+            color: #3b82f6;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .page-title {
+            font-size: 1.8rem;
+            color: #1e293b;
+            font-weight: 700;
+            margin-bottom: 10px;
+            letter-spacing: 0.5px;
+            text-align: center;
+        }
+        
+        .page-subtitle {
+            color: #64748b;
+            font-size: 1rem;
+            font-weight: 400;
+            max-width: 800px;
+            line-height: 1.6;
+        }
+        
+        /* 挑战卡片容器 */
+        .challenge-cards {
+            display: flex;
+            gap: 30px;
+            margin: 40px 0;
+        }
+        
+        /* 挑战卡片 - 采用与登录注册页面一致的卡片设计 */
+        .challenge-card {
+            flex: 1;
+            border-radius: 16px;
+            padding: 35px 30px;
+            color: white;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-decoration: none;
+            display: block;
+            position: relative;
+            overflow: hidden;
+            border: none;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        /* 卡片装饰 */
+        .challenge-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            border-radius: 16px 16px 0 0;
+        }
+        
+        .challenge-card.nodedefense::before {
+            background: linear-gradient(90deg, #f093fb 0%, #f5576c 100%);
+        }
+        
+        .challenge-card.mydefense::before {
+            background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+        }
+        
+        .challenge-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* 越狱挑战卡片 */
+        .challenge-card.nodedefense {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        
+        /* 防御挑战卡片 */
+        .challenge-card.mydefense {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+        
+        /* 卡片图标 */
+        .challenge-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        /* 卡片标题 - 采用与登录注册页面一致的标题样式 */
+        .challenge-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-align: center;
+            letter-spacing: 0.5px;
+        }
+        
+        /* 卡片描述 */
+        .challenge-desc {
+            font-size: 0.95rem;
+            opacity: 0.95;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        /* 卡片特性列表 */
+        .challenge-features {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .challenge-features ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            font-size: 0.9rem;
+        }
+        
+        .challenge-features li {
+            padding: 8px 0;
+            display: flex;
+            align-items: center;
+        }
+        
+        .challenge-features li::before {
+            content: "✓ ";
+            font-weight: bold;
+            margin-right: 10px;
+            font-size: 1.1rem;
+        }
+        
+        /* 信息区域 - 采用与登录注册页面一致的样式 */
+        .info-section {
+            margin-top: 40px;
+            padding: 25px 30px;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            border-radius: 16px;
+            border-left: 4px solid #3b82f6;
+            border: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .info-section h3 {
+            color: #0369a1;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .info-section p {
+            color: #475569;
+            line-height: 1.8;
+            font-size: 0.95rem;
+        }
+        
+        /* 导航按钮 - 与登录注册页面的按钮风格一致 */
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
+            color: #475569;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            margin-top: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .back-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            color: #334155;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .ai-security-container {
+                padding: 40px 30px;
+                margin: 20px auto;
+                max-width: 95%;
+            }
+            
+            .challenge-cards {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .challenge-card {
+                padding: 30px 25px;
+            }
+            
+            .page-title {
+                font-size: 1.6rem;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .ai-security-container {
+                padding: 35px 25px;
+            }
+            
+            .page-title {
+                font-size: 1.4rem;
+            }
+            
+            .challenge-icon {
+                font-size: 40px;
+            }
+        }
+    </style>
+
+    <div class="ai-security-container">
+        <!-- 页面标题区域 - 与登录注册页面一致的设计 -->
+        <div class="page-header">
+            <div class="page-icon">
+                <i class="fas fa-shield-alt"></i>
+            </div>
+            <div class="page-title">AI安全 - 越狱与防御挑战</div>
+            <div class="page-subtitle">
+                本模块提供两种 AI 安全挑战模式，帮助你了解大语言模型的安全性测试与防御策略。
+            </div>
+        </div>
+
+        <div class="challenge-cards">
+            <!-- 越狱挑战卡片 -->
+            <a href="{{ url_for('nodefense') }}" class="challenge-card nodedefense">
+                <div class="challenge-icon">💀</div>
+                <div class="challenge-title">越狱挑战（NoDefense）</div>
+                <div class="challenge-desc">
+                    在无防御状态下测试 ChatBot，尝试突破安全限制，探索 AI 的脆弱点。
+                </div>
+                <div class="challenge-features">
+                    <ul>
+                        <li>体验真实的越狱攻击场景</li>
+                        <li>了解常见攻击手法</li>
+                        <li>学习安全边界的重要性</li>
+                    </ul>
+                </div>
+            </a>
+
+            <!-- 防御挑战卡片 -->
+            <a href="{{ url_for('mydefense') }}" class="challenge-card mydefense">
+                <div class="challenge-icon">🛡️</div>
+                <div class="challenge-title">防御挑战（MyDefense）</div>
+                <div class="challenge-desc">
+                    编写防御策略保护 ChatBot，抵御各种越狱攻击，提升 AI 安全能力。
+                </div>
+                <div class="challenge-features">
+                    <ul>
+                        <li>设计防御机制</li>
+                        <li>测试防御有效性</li>
+                        <li>参与攻防竞赛</li>
+                    </ul>
+                </div>
+            </a>
+        </div>
+
+        <!-- 学习建议区域 -->
+        <div class="info-section">
+            <h3><i class="fas fa-lightbulb"></i> 学习建议</h3>
+            <p>
+                1. 先尝试 <strong>越狱挑战</strong>，了解攻击者可能使用的手段<br>
+                2. 再进入 <strong>防御挑战</strong>，学习如何构建有效的防御策略<br>
+                3. 使用"可用性检测"功能测试你的防御是否会影响正常功能<br>
+                4. 持续优化防御代码，在竞赛中取得好成绩
+            </p>
+        </div>
+
+        <!-- 返回按钮 -->
+        <div style="text-align: center; margin-top: 40px;">
+            <a href="{{ url_for('index') }}" class="back-button">
+                <i class="fas fa-arrow-left"></i> 返回首页
+            </a>
+        </div>
+    </div>
+
+    <!-- Font Awesome 图标库 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    
+    <script>
+        // 添加卡片交互效果
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.challenge-card');
+            
+            cards.forEach(card => {
+                // 点击效果
+                card.addEventListener('click', function(e) {
+                    // 添加点击动画
+                    this.style.transform = 'scale(0.98)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 150);
+                });
+                
+                // 鼠标悬停效果增强
+                card.addEventListener('mouseenter', function() {
+                    this.style.transition = 'all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transition = 'all 0.3s ease';
+                });
+            });
+            
+            // 添加键盘快捷键
+            document.addEventListener('keydown', function(e) {
+                if (e.key === '1' || e.key === '!') {
+                    // 快捷键 1 选择越狱挑战
+                    document.querySelector('.challenge-card.nodedefense').click();
+                } else if (e.key === '2' || e.key === '@') {
+                    // 快捷键 2 选择防御挑战
+                    document.querySelector('.challenge-card.mydefense').click();
+                }
+            });
+        });
+    </script>
+{% endblock %}

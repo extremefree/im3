@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的技术博客 | Flask应用开发</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* 头部样式 */
+        header {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            padding: 1.5rem 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo i {
+            margin-right: 10px;
+            font-size: 2rem;
+        }
+        
+        /* 返回首页按钮 - 使用AI安全页面的样式 */
+        .back-to-home {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
+            color: #475569;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            margin-right: auto;
+        }
+        
+        .back-to-home:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            color: #334155;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 1.8rem;
+        }
+        
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            padding: 5px 10px;
+            border-radius: 4px;
+        }
+        
+        nav ul li a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        /* 主要内容区域 */
+        .main-content {
+            display: flex;
+            margin: 2rem 0;
+            gap: 2rem;
+        }
+        
+        /* 博客文章区域 */
+        .blog-posts {
+            flex: 3;
+        }
+        
+        .post {
+            background-color: white;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .post:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+        }
+        
+        .post-header {
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 1rem;
+        }
+        
+        .post-title {
+            font-size: 1.8rem;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+        
+        .post-meta {
+            display: flex;
+            color: #7f8c8d;
+            font-size: 0.95rem;
+        }
+        
+        .post-meta span {
+            margin-right: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .post-meta i {
+            margin-right: 5px;
+        }
+        
+        .post-content {
+            font-size: 1.1rem;
+            color: #444;
+            line-height: 1.8;
+        }
+        
+        .post-content p {
+            margin-bottom: 1.2rem;
+        }
+        
+        .read-more {
+            display: inline-block;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            color: white;
+            padding: 0.7rem 1.5rem;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .read-more:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(106, 17, 203, 0.3);
+        }
+        
+        /* 侧边栏 */
+        .sidebar {
+            flex: 1;
+        }
+        
+        .sidebar-widget {
+            background-color: white;
+            border-radius: 10px;
+            padding: 1.8rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .widget-title {
+            font-size: 1.4rem;
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .about-me {
+            text-align: center;
+        }
+        
+        .profile-img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 1rem;
+            border: 5px solid #f0f0f0;
+        }
+        
+        .social-links {
+            display: flex;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+        
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: #f5f7fa;
+            border-radius: 50%;
+            margin: 0 0.5rem;
+            color: #555;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .social-links a:hover {
+            background-color: #6a11cb;
+            color: white;
+            transform: translateY(-3px);
+        }
+        
+        .categories-list {
+            list-style: none;
+        }
+        
+        .categories-list li {
+            padding: 0.8rem 0;
+            border-bottom: 1px dashed #eee;
+        }
+        
+        .categories-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .categories-list a {
+            color: #555;
+            text-decoration: none;
+            display: flex;
+            justify-content: space-between;
+            transition: color 0.3s ease;
+        }
+        
+        .categories-list a:hover {
+            color: #6a11cb;
+        }
+        
+        .categories-list span {
+            background-color: #f0f0f0;
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+        
+        .tag-cloud {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.7rem;
+        }
+        
+        .tag-cloud a {
+            background-color: #f0f0f0;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            text-decoration: none;
+            color: #555;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+        
+        .tag-cloud a:hover {
+            background-color: #6a11cb;
+            color: white;
+        }
+        
+        /* 页脚 */
+        footer {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            padding: 3rem 0 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .footer-section {
+            flex: 1;
+            min-width: 250px;
+        }
+        
+        .footer-section h3 {
+            font-size: 1.4rem;
+            margin-bottom: 1.5rem;
+            color: white;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+        
+        .footer-section h3::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 50px;
+            height: 2px;
+            background-color: #6a11cb;
+        }
+        
+        .footer-section p {
+            margin-bottom: 1rem;
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+        
+        .footer-links a {
+            color: #bdc3c7;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: #6a11cb;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 1.5rem;
+            border-top: 1px solid #34495e;
+            color: #95a5a6;
+            font-size: 0.9rem;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 992px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .header-container {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+            
+            nav ul {
+                margin-top: 1rem;
+                justify-content: center;
+            }
+            
+            nav ul li {
+                margin: 0 0.8rem;
+            }
+            
+            .back-to-home {
+                margin-right: 0;
+                margin-bottom: 1rem;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .post {
+                padding: 1.5rem;
+            }
+            
+            .post-title {
+                font-size: 1.5rem;
+            }
+            
+            .post-meta {
+                flex-direction: column;
+            }
+            
+            .post-meta span {
+                margin-bottom: 0.5rem;
+            }
+            
+            nav ul {
+                flex-wrap: wrap;
+            }
+            
+            .back-to-home {
+                padding: 8px 16px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 头部 -->
+    <header>
+        <div class="container header-container">
+            <!-- 添加返回首页按钮到导航栏最左边 -->
+            <a href="{{ url_for('index') }}" class="back-to-home">
+                <i class="fas fa-arrow-left"></i> 返回首页
+            </a>
+            
+            <div class="logo">
+                <i class="fas fa-code"></i>
+                <span>技术博客</span>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="{{ url_for('index') }}"><i class="fas fa-home"></i> 首页</a></li>
+                    <li><a href="#"><i class="fas fa-folder"></i> 分类</a></li>
+                    <li><a href="#"><i class="fas fa-tags"></i> 标签</a></li>
+                    <li><a href="#"><i class="fas fa-info-circle"></i> 关于</a></li>
+                    <li><a href="#"><i class="fas fa-envelope"></i> 联系</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- 主要内容区域 -->
+        <div class="main-content">
+            <!-- 博客文章区域 -->
+            <div class="blog-posts">
+                <!-- 第一篇博客文章 -->
+                <article class="post">
+                    <div class="post-header">
+                        <h2 class="post-title">Flask Web开发指南：构建高效应用</h2>
+                        <div class="post-meta">
+                            <span><i class="far fa-calendar"></i> 2026年01月15日</span>
+                            <span><i class="far fa-user"></i> 作者：张三</span>
+                            <span><i class="far fa-folder"></i> Python开发</span>
+                            <span><i class="far fa-comments"></i> 12条评论</span>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        <p>Flask是一个基于Python的轻量级Web框架，因其简洁、灵活和易扩展的特性而广受开发者喜爱。它采用"微内核"设计理念，核心功能简单而强大，通过丰富的扩展库可以满足各种复杂的Web应用需求。</p>
+                        
+                        <p>Flask框架的核心优势在于其路由系统、模板引擎和请求上下文管理。路由系统让URL映射变得直观简单；Jinja2模板引擎支持模板继承和宏定义，大大提高了代码复用性；请求上下文机制确保了多线程环境下的数据隔离。</p>
+                        
+                        <p>在实际开发中，Flask的最佳实践包括：合理组织项目结构、使用蓝图(Blueprint)进行模块化开发、配置环境变量管理敏感信息、以及采用工厂模式创建应用实例。这些实践能够帮助开发者构建出既易于维护又具备良好扩展性的Web应用。</p>
+                        
+                        <p>对于初学者，建议从创建简单的"Hello World"应用开始，逐步学习路由、模板、表单处理、数据库集成等核心概念。Flask丰富的扩展生态圈，如Flask-SQLAlchemy、Flask-Login、Flask-WTF等，可以显著提升开发效率。</p>
+                    </div>
+                    <a href="#" class="read-more">阅读全文 <i class="fas fa-arrow-right"></i></a>
+                </article>
+
+                <!-- 第二篇博客文章 -->
+                <article class="post">
+                    <div class="post-header">
+                        <h2 class="post-title">深入理解域名系统(DNS)：互联网的"电话簿"</h2>
+                        <div class="post-meta">
+                            <span><i class="far fa-calendar"></i> 2026年01月15日</span>
+                            <span><i class="far fa-user"></i> 作者：李四</span>
+                            <span><i class="far fa-folder"></i> 网络技术</span>
+                            <span><i class="far fa-comments"></i> 8条评论</span>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        <p>域名系统(Domain Name System, DNS)是互联网的基础设施之一，它充当着将人类可读的域名(如google.com)转换为计算机可识别的IP地址(如142.250.190.78)的关键角色。可以将其想象为互联网的"电话簿"，让用户无需记忆复杂的数字地址就能访问网站。</p>
+                        
+                        <p>DNS的工作原理采用分层分布式结构，主要包含以下几个层级：根域名服务器、顶级域名服务器(TLD，如.com、.org等)、权威域名服务器和本地域名服务器。当一个用户在浏览器中输入网址时，DNS解析过程会从本地缓存开始，逐级向上查询，最终获取目标服务器的IP地址。</p>
+                        
+                        <p>常见的DNS记录类型包括：A记录(将域名指向IPv4地址)、AAAA记录(指向IPv6地址)、CNAME记录(别名记录)、MX记录(邮件交换记录)、TXT记录(文本记录)和NS记录(域名服务器记录)。了解这些记录类型对于网站管理员和开发者至关重要。</p>
+                        
+                        <p>DNS安全也是不容忽视的重要话题。DNS劫持、DNS污染和DNS缓存投毒是常见的攻击手段。为防范这些威胁，可以采用DNSSEC(DNS安全扩展)、设置合理的TTL值、选择可靠的DNS服务提供商等措施。对于个人用户，使用公共DNS服务如Cloudflare的1.1.1.1或Google的8.8.8.8通常能获得更快的解析速度和更好的隐私保护。</p>
+                    </div>
+                    <a href="#" class="read-more">阅读全文 <i class="fas fa-arrow-right"></i></a>
+                </article>
+
+                <!-- 第三篇博客文章 -->
+                <article class="post">
+                    <div class="post-header">
+                        <h2 class="post-title">博客网站部署全攻略：从开发到上线</h2>
+                        <div class="post-meta">
+                            <span><i class="far fa-calendar"></i> 2026年01月15日</span>
+                            <span><i class="far fa-user"></i> 作者：王五</span>
+                            <span><i class="far fa-folder"></i> DevOps</span>
+                            <span><i class="far fa-comments"></i> 15条评论</span>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        <p>将一个本地开发的博客网站部署到互联网上，是每个Web开发者必须掌握的核心技能。部署不仅仅是上传文件那么简单，它涉及到服务器配置、环境设置、域名绑定、SSL证书安装和持续集成等多个环节。</p>
+                        
+                        <p>常见的部署方案包括：虚拟主机(适合静态网站)、VPS(虚拟专用服务器)、云服务器(如AWS EC2、阿里云ECS)和容器化部署(使用Docker)。对于个人博客，推荐使用云服务器或PaaS平台(如Heroku、Vercel)，它们提供了更简便的部署流程和更好的扩展性。</p>
+                        
+                        <p>部署Flask博客网站的关键步骤包括：1) 配置生产环境，关闭调试模式；2) 使用Gunicorn或uWSGI作为WSGI服务器；3) 配置Nginx作为反向代理；4) 设置环境变量管理敏感信息；5) 安装SSL证书启用HTTPS；6) 配置域名解析。</p>
+                        
+                        <p>持续集成/持续部署(CI/CD)是现代Web开发的重要实践。通过GitHub Actions、GitLab CI或Jenkins等工具，可以实现代码推送后自动测试、构建和部署。此外，监控和日志记录也是部署后不可忽视的环节，使用工具如Prometheus、Grafana或ELK Stack可以帮助开发者及时发现和解决问题。</p>
+                        
+                        <p>对于流量较小的个人博客，也可以考虑使用静态网站生成器(如Hugo、Jekyll)配合GitHub Pages或Netlify免费托管服务，这样不仅成本低，而且维护简单，安全性也更高。</p>
+                    </div>
+                    <a href="#" class="read-more">阅读全文 <i class="fas fa-arrow-right"></i></a>
+                </article>
+            </div>
+
+            <!-- 侧边栏 -->
+            <aside class="sidebar">
+                <!-- 关于我 -->
+                <div class="sidebar-widget about-me">
+                    <h3 class="widget-title">关于作者</h3>
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80" alt="作者头像" class="profile-img">
+                    <p>一名热爱技术的全栈开发者，专注于Python和Web开发。喜欢分享知识和学习心得。</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-github"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-weixin"></i></a>
+                    </div>
+                </div>
+
+                <!-- 分类 -->
+                <div class="sidebar-widget">
+                    <h3 class="widget-title">文章分类</h3>
+                    <ul class="categories-list">
+                        <li><a href="#">Python开发 <span>8</span></a></li>
+                        <li><a href="#">Flask框架 <span>12</span></a></li>
+                        <li><a href="#">前端技术 <span>15</span></a></li>
+                        <li><a href="#">网络技术 <span>6</span></a></li>
+                        <li><a href="#">DevOps <span>5</span></a></li>
+                        <li><a href="#">算法与数据结构 <span>10</span></a></li>
+                    </ul>
+                </div>
+
+                <!-- 标签云 -->
+                <div class="sidebar-widget">
+                    <h3 class="widget-title">热门标签</h3>
+                    <div class="tag-cloud">
+                        <a href="#">Python</a>
+                        <a href="#">Flask</a>
+                        <a href="#">Web开发</a>
+                        <a href="#">DNS</a>
+                        <a href="#">域名系统</a>
+                        <a href="#">服务器部署</a>
+                        <a href="#">Nginx</a>
+                        <a href="#">Docker</a>
+                        <a href="#">云服务器</a>
+                        <a href="#">HTTPS</a>
+                    </div>
+                </div>
+
+                <!-- 最新文章 -->
+                <div class="sidebar-widget">
+                    <h3 class="widget-title">最新文章</h3>
+                    <ul class="categories-list">
+                        <li><a href="#">Flask Web开发指南：构建高效应用</a></li>
+                        <li><a href="#">深入理解域名系统(DNS)：互联网的"电话簿"</a></li>
+                        <li><a href="#">博客网站部署全攻略：从开发到上线</a></li>
+                        <li><a href="#">Python虚拟环境管理指南</a></li>
+                        <li><a href="#">Git版本控制入门教程</a></li>
+                    </ul>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <!-- 页脚 -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>关于博客</h3>
+                    <p>本博客专注于分享Web开发技术，特别是Python Flask框架的相关知识。我们致力于提供高质量的技术教程和最佳实践。</p>
+                    <p>希望通过分享知识，帮助更多开发者成长。</p>
+                </div>
+                <div class="footer-section">
+                    <h3>快速链接</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">首页</a></li>
+                        <li><a href="#">所有文章</a></li>
+                        <li><a href="#">分类目录</a></li>
+                        <li><a href="#">标签云</a></li>
+                        <li><a href="#">关于作者</a></li>
+                        <li><a href="#">联系我</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>联系信息</h3>
+                    <p><i class="fas fa-map-marker-alt"></i> 北京市海淀区中关村</p>
+                    <p><i class="fas fa-envelope"></i> contact@example.com</p>
+                    <p><i class="fas fa-phone"></i> +86 138 0000 0000</p>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2026 我的技术博客. 保留所有权利.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 简单的交互效果
+        document.addEventListener('DOMContentLoaded', function() {
+            // 为阅读更多按钮添加点击效果
+            const readMoreButtons = document.querySelectorAll('.read-more');
+            readMoreButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const postTitle = this.closest('.post').querySelector('.post-title').textContent;
+                    alert(`点击了"${postTitle}"的阅读全文按钮，实际项目中这里会跳转到文章详情页。`);
+                });
+            });
+            
+            // 为导航链接添加点击效果
+            const navLinks = document.querySelectorAll('nav a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const linkText = this.textContent.trim();
+                    alert(`点击了"${linkText}"链接，实际项目中这里会进行页面导航。`);
+                });
+            });
+            
+            // 为分类和标签链接添加点击效果
+            const categoryLinks = document.querySelectorAll('.categories-list a, .tag-cloud a');
+            categoryLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const linkText = this.textContent.trim();
+                    alert(`点击了"${linkText}"，实际项目中这里会筛选相关文章。`);
+                });
+            });
+            
+            // 简单的动画效果：文章进入视图时淡入
+            const posts = document.querySelectorAll('.post');
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+            
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+            
+            posts.forEach(post => {
+                post.style.opacity = '0';
+                post.style.transform = 'translateY(20px)';
+                post.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                observer.observe(post);
+            });
+            
+            // 为返回首页按钮添加点击效果
+            const backToHomeButton = document.querySelector('.back-to-home');
+            if (backToHomeButton) {
+                backToHomeButton.addEventListener('click', function(e) {
+                    // 这里可以添加一些动画效果
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 150);
+                });
+            }
+        });
+    </script>
+</body>
+</html>

@@ -3,128 +3,518 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>用户注册</title>
+    <title>用户注册 - 冬令营实训系统</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f9f9f9;
+        /* 基础样式 */
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+            font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            color: #334155;
+            line-height: 1.6;
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
         }
+        
+        /* 背景装饰 */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
+            opacity: 0.5;
+            z-index: -1;
+        }
+        
+        /* 注册容器 */
         .register-container {
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-            padding: 40px;
-            width: 400px;
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+            padding: 50px 45px;
+            width: 100%;
+            max-width: 720px;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .register-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: linear-gradient(90deg, #10b981, #3b82f6, #8b5cf6);
+        }
+        
+        /* 系统标识 */
+        .system-brand {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        
+        .system-icon {
+            font-size: 3.5rem;
+            color: #10b981;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #10b981, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .system-name {
+            font-size: 1.8rem;
+            color: #1e293b;
+            font-weight: 700;
+            margin-bottom: 5px;
+            letter-spacing: 0.5px;
+        }
+        
+        .system-subtitle {
+            color: #64748b;
+            font-size: 1rem;
+            font-weight: 400;
+        }
+        
+        /* 表单标题 */
+        .form-title {
+            font-size: 1.6rem;
+            color: #1e293b;
+            margin-bottom: 30px;
+            font-weight: 600;
+            position: relative;
+            display: inline-block;
+            padding-bottom: 10px;
+            width: 100%;
             text-align: center;
         }
-        .register-container h1 {
-            color: #333;
-            margin-bottom: 24px;
-            font-size: 24px;
+        
+        .form-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 30%;
+            width: 40%;
+            height: 3px;
+            background: linear-gradient(90deg, #10b981, #3b82f6);
+            border-radius: 2px;
         }
-        .register-container input {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 16px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 14px;
-            box-sizing: border-box;
-        }
-        .register-container input:focus {
-            border-color: #6B8EFF;
-            outline: none;
-        }
-        .register-container button {
-            width: 100%;
-            padding: 12px;
-            background-color: #6B8EFF;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-        .register-container button:hover {
-            background-color: #4A7DFF;
-        }
-        .register-container a {
-            display: block;
-            margin-top: 16px;
-            color: #6B8EFF;
-            text-decoration: none;
-            font-size: 14px;
-        }
-        .register-container a:hover {
-            text-decoration: underline;
-        }
-        .logo {
-            margin-bottom: 24px;
-            font-size: 32px;
-            color: #333;
-            font-weight: bold;
-        }
+        
+        /* 错误消息 */
         .error-message {
-            color: red;
-            margin-bottom: 16px;
-            font-size: 14px;
-            background-color: #ffe6e6;
-            padding: 10px;
-            border-radius: 4px;
-        }
-        .tips {
+            padding: 14px 18px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
             text-align: left;
-            font-size: 12px;
-            color: #666;
-            margin-bottom: 16px;
-            background-color: #f0f0f0;
-            padding: 10px;
-            border-radius: 4px;
+            animation: fadeIn 0.5s ease;
+            background-color: #fef2f2;
+            color: #dc2626;
+            border-left: 4px solid #dc2626;
         }
-        .tips ul {
-            margin: 5px 0;
-            padding-left: 20px;
+        
+        /* 注册提示 */
+        .register-tips {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+            text-align: left;
+            border: 1px solid #bae6fd;
+        }
+        
+        .tips-title {
+            font-size: 1.1rem;
+            color: #0369a1;
+            margin-bottom: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .tips-title i {
+            color: #3b82f6;
+        }
+        
+        .tips-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .tips-list li {
+            padding: 6px 0;
+            color: #475569;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .tips-list li i {
+            color: #10b981;
+            font-size: 0.9rem;
+        }
+        
+        /* 表单样式 */
+        .register-form {
+            margin-bottom: 25px;
+        }
+        
+        .form-group {
+            margin-bottom: 22px;
+            position: relative;
+        }
+        
+        .form-group i {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            font-size: 1.1rem;
+            transition: color 0.3s ease;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 16px 16px 16px 50px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1rem;
+            color: #334155;
+            background-color: #f8fafc;
+            transition: all 0.3s ease;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: #10b981;
+            background-color: white;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+        }
+        
+        .form-input:focus + i {
+            color: #10b981;
+        }
+        
+        .form-input::placeholder {
+            color: #94a3b8;
+        }
+        
+        /* 密码强度指示器 */
+        .password-strength {
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .strength-meter {
+            height: 5px;
+            background-color: #e2e8f0;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 5px;
+        }
+        
+        .strength-fill {
+            height: 100%;
+            width: 0%;
+            border-radius: 3px;
+            transition: width 0.3s ease, background-color 0.3s ease;
+        }
+        
+        .strength-text {
+            font-size: 0.85rem;
+            color: #64748b;
+            text-align: left;
+        }
+        
+        /* 注册按钮 */
+        .register-button {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+        
+        .register-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+        }
+        
+        .register-button:active {
+            transform: translateY(0);
+        }
+        
+        /* 返回登录链接 */
+        .back-link {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            color: #64748b;
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: color 0.3s ease;
+            margin-top: 20px;
+            padding: 12px;
+            border-radius: 8px;
+        }
+        
+        .back-link:hover {
+            color: #3b82f6;
+            background-color: #f8fafc;
+        }
+        
+        /* 底部信息 */
+        .register-footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+            color: #94a3b8;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+        
+        /* 动画 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 576px) {
+            body {
+                padding: 15px;
+            }
+            
+            .register-container {
+                padding: 40px 30px;
+            }
+            
+            .system-name {
+                font-size: 1.6rem;
+            }
+            
+            .form-title {
+                font-size: 1.4rem;
+            }
+            
+            .register-tips {
+                padding: 15px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="register-container">
-        <div class="logo">清华附中冬令营实训系统</div>
-        <h1>新用户注册</h1>
+        <!-- 系统标识 -->
+        <div class="system-brand">
+            <div class="system-icon">
+                <i class="fas fa-user-plus"></i>
+            </div>
+            <div class="system-name">清华附中-奇安信智能安全科技冬令营实训系统</div>
+            <div class="system-subtitle">加入我们，开启学习之旅</div>
+        </div>
         
+        <h2 class="form-title">新用户注册</h2>
+        
+        <!-- 错误消息 -->
         {% if error %}
         <div class="error-message">
-            {{ error }}
+            <i class="fas fa-exclamation-circle"></i>
+            <span>{{ error }}</span>
         </div>
         {% endif %}
         
-        <div class="tips">
-            <strong>注册要求：</strong>
-            <ul>
-                <li>用户名至少3个字符</li>
-                <li>密码至少6个字符</li>
-                <li>两次密码必须一致</li>
+        <!-- 注册提示 -->
+        <div class="register-tips">
+            <div class="tips-title">
+                <i class="fas fa-info-circle"></i>
+                <span>注册要求</span>
+            </div>
+            <ul class="tips-list">
+                <li><i class="fas fa-check"></i> 用户名至少3个字符</li>
+                <li><i class="fas fa-check"></i> 密码至少6个字符</li>
+                <li><i class="fas fa-check"></i> 两次密码必须一致</li>
+                <li><i class="fas fa-check"></i> 密码建议包含字母和数字</li>
             </ul>
         </div>
         
-        <form id="register-form" method="POST" action="/register">
-            <input type="text" id="username" name="username" placeholder="请输入用户名（至少3个字符）" required>
-            <input type="password" id="password" name="password" placeholder="请输入密码（至少6个字符）" required>
-            <input type="password" id="password_confirm" name="password_confirm" placeholder="请再次输入密码" required>
-            <button type="submit">注册</button>
+        <!-- 注册表单 -->
+        <form id="register-form" method="POST" action="/register" class="register-form">
+            <div class="form-group">
+                <i class="fas fa-user"></i>
+                <input type="text" id="username" name="username" class="form-input" placeholder="请输入用户名（至少3个字符）" required>
+            </div>
+            
+            <div class="form-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="password" name="password" class="form-input" placeholder="请输入密码（至少6个字符）" required>
+                <div class="password-strength" id="password-strength">
+                    <div class="strength-meter">
+                        <div class="strength-fill" id="strength-fill"></div>
+                    </div>
+                    <div class="strength-text" id="strength-text">密码强度：弱</div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="password_confirm" name="password_confirm" class="form-input" placeholder="请再次输入密码" required>
+                <div class="password-match" id="password-match" style="display: none; font-size: 0.85rem; margin-top: 5px; text-align: left;"></div>
+            </div>
+            
+            <button type="submit" class="register-button">
+                <i class="fas fa-user-plus"></i> 注册账户
+            </button>
         </form>
         
-        <a href="/">已有账号？返回登录</a>
+        <!-- 返回登录链接 -->
+        <a href="/login" class="back-link">
+            <i class="fas fa-arrow-left"></i> 已有账号？返回登录
+        </a>
+        
+        <!-- 底部信息 -->
+        <div class="register-footer">
+            <p>清华附中-奇安信智能安全科技冬令营实训系统© 2026 版权所有</p>
+        </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const passwordInput = document.getElementById('password');
+            const passwordConfirmInput = document.getElementById('password_confirm');
+            const strengthFill = document.getElementById('strength-fill');
+            const strengthText = document.getElementById('strength-text');
+            const passwordStrengthDiv = document.getElementById('password-strength');
+            const passwordMatchDiv = document.getElementById('password-match');
+            const form = document.getElementById('register-form');
+            
+            // 密码强度检测
+            passwordInput.addEventListener('input', function() {
+                const password = this.value;
+                let strength = 0;
+                
+                // 显示密码强度指示器
+                passwordStrengthDiv.style.display = 'block';
+                
+                // 检测密码长度
+                if (password.length >= 6) strength += 1;
+                if (password.length >= 8) strength += 1;
+                
+                // 检测包含小写字母
+                if (/[a-z]/.test(password)) strength += 1;
+                
+                // 检测包含大写字母
+                if (/[A-Z]/.test(password)) strength += 1;
+                
+                // 检测包含数字
+                if (/[0-9]/.test(password)) strength += 1;
+                
+                // 检测包含特殊字符
+                if (/[^a-zA-Z0-9]/.test(password)) strength += 1;
+                
+                // 更新强度指示器
+                let strengthPercentage = 0;
+                let strengthLabel = "";
+                let strengthColor = "";
+                
+                if (strength <= 2) {
+                    strengthPercentage = 33;
+                    strengthLabel = "密码强度：弱";
+                    strengthColor = "#ef4444";
+                } else if (strength <= 4) {
+                    strengthPercentage = 66;
+                    strengthLabel = "密码强度：中";
+                    strengthColor = "#f59e0b";
+                } else {
+                    strengthPercentage = 100;
+                    strengthLabel = "密码强度：强";
+                    strengthColor = "#10b981";
+                }
+                
+                strengthFill.style.width = strengthPercentage + '%';
+                strengthFill.style.backgroundColor = strengthColor;
+                strengthText.textContent = strengthLabel;
+                strengthText.style.color = strengthColor;
+            });
+            
+            // 密码确认匹配检测
+            function checkPasswordMatch() {
+                const password = passwordInput.value;
+                const confirmPassword = passwordConfirmInput.value;
+                
+                if (confirmPassword === '') {
+                    passwordMatchDiv.style.display = 'none';
+                    return;
+                }
+                
+                passwordMatchDiv.style.display = 'block';
+                
+                if (password === confirmPassword) {
+                    passwordMatchDiv.innerHTML = '<i class="fas fa-check" style="color: #10b981;"></i> 密码匹配';
+                    passwordMatchDiv.style.color = '#10b981';
+                } else {
+                    passwordMatchDiv.innerHTML = '<i class="fas fa-times" style="color: #ef4444;"></i> 密码不匹配';
+                    passwordMatchDiv.style.color = '#ef4444';
+                }
+            }
+            
+            passwordConfirmInput.addEventListener('input', checkPasswordMatch);
+            passwordInput.addEventListener('input', checkPasswordMatch);
+            
+            // 表单提交动画
+            form.addEventListener('submit', function(e) {
+                const button = this.querySelector('.register-button');
+                button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 注册中...';
+                button.disabled = true;
+            });
+            
+            // 添加键盘快捷键支持
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && !e.target.matches('button, a')) {
+                    const submitButton = document.querySelector('.register-button');
+                    if (submitButton) {
+                        submitButton.click();
+                    }
+                }
+            });
+            
+            // 输入框自动聚焦
+            document.getElementById('username').focus();
+        });
+    </script>
 </body>
 </html>
-
-
-

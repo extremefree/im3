@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, session, redirect, url_for
-from user_info import get_user_data
+from AI_backend import chatbot_bp
 import csv
 import os
 import time
@@ -11,11 +11,14 @@ from werkzeug.security import check_password_hash, generate_password_hash
 app = Flask(__name__)
 app.secret_key = 'RtRo%wKe4!'
 
+### 注册 Chatbot API 蓝图###
+app.register_blueprint(chatbot_bp)
+
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 USERINFO_CSV_PATH = os.path.join(BASE_DIR, 'data', 'userinfo.csv')
 
 # ======================= 实验开关（给学生改造用） =======================
-# TODO(实验任务): 打开/完善这些开关与函数，实现“登录防御”并做前后对比复测
+# TODO(实验任务): 打开/完善这些开关与函数，实现"登录防御"并做前后对比复测
 STORE_HASHED_PASSWORDS = True
 HIDE_ENUMERATION_ERRORS = True
 # =====================================================================
@@ -140,8 +143,12 @@ def record_login_success(username: str, ip: str) -> None:
 ### 登录状态判断###
 
 
-@app.route('/login', methods=['POST'])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
+    # 如果不是POST请求，直接返回登录页面
+    if request.method != 'POST':
+        return render_template('login.html')
+
     # 获取用户输入的用户名和密码
     input_username = request.form.get('username')
     input_password = request.form.get('password')
@@ -227,17 +234,16 @@ def register():
         return render_template('register.html', error='注册失败，请重试')
 
 
-### 默认页面###
+###1.默认页面###
 
 
 @app.route('/')
 def home():
     if session.get('logged_in'):
-        print("hello1")
         return redirect(url_for('index'))
     return render_template('login.html')
 
-### 首页###
+###2.首页###
 
 
 @app.route('/index')
@@ -247,58 +253,35 @@ def index():
         return redirect(url_for('home'))
     return render_template('index.html')
 
-### 案例1页面###
+###3.博客###
 
-
-@app.route("/example1")
-def example1():
+@app.route("/blog")
+def blog():
     if not session.get('logged_in'):
         return redirect(url_for('home'))
+        
+    return render_template("blog.html")
 
-    return render_template("example1.html")
+###4.密码安全###
 
-### XX案例2页面###
-
-
-@app.route("/example2")
-def example2():
+@app.route("/passwordsecurity")
+def passwordsecurity():
     if not session.get('logged_in'):
         return redirect(url_for('home'))
+    
+    return render_template("passwordsecurity.html")
 
-    return render_template("example2.html")
+###5.AI安全###
 
-### XX案例3页面###
-
-
-@app.route("/example3")
-def example3():
+@app.route("/aisecurity")
+def aisecurity():
     if not session.get('logged_in'):
         return redirect(url_for('home'))
-
-    return render_template("example3.html")
-
-### XX案例4页面###
+    
+    return render_template("aisecurity.html")
 
 
-@app.route("/example4")
-def example4():
-    if not session.get('logged_in'):
-        return redirect(url_for('home'))
-
-    return render_template("example4.html")
-
-### 个人中心###
-
-
-@app.route("/profile")
-def profile():
-    if not session.get('logged_in'):
-        return redirect(url_for('home'))
-    userinfo = get_user_data()
-    # print(userinfo)
-    return render_template("profile.html", userinfo=userinfo)
-
-### 退出页面###
+###6.退出页面###
 
 
 @app.route('/logout')
@@ -306,6 +289,24 @@ def logout():
     session.pop('logged_in', None)
     return render_template('login.html')
 
+###7.越狱挑战页面（无防御）###
+
+
+@app.route('/nodefense')
+def nodefense():
+    if not session.get('logged_in'):
+        return redirect(url_for('home'))
+    return render_template('nodefense.html')
+
+###8.防御挑战页面（有防御）###
+
+
+@app.route('/mydefense')
+def mydefense():
+    if not session.get('logged_in'):
+        return redirect(url_for('home'))
+    return render_template('mydefense.html')
+
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5051, use_reloader=False)
+    app.run(debug=True, host='0.0.0.0', port=8080, use_reloader=False)

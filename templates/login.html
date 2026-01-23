@@ -1,102 +1,395 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>系统登录</title>
+    <title>系统登录 - 清华附中-奇安信智能安全科技冬令营实训系统</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f9f9f9;
+        /* 基础样式 */
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+            font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            color: #334155;
+            line-height: 1.6;
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
         }
+        
+        /* 背景装饰 */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
+            opacity: 0.5;
+            z-index: -1;
+        }
+        
+        /* 登录容器 */
         .login-container {
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-            padding: 40px;
-            width: 400px;
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+            padding: 50px 45px;
+            width: 100%;
+            max-width: 700px;
             text-align: center;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
         }
-        .login-container h1 {
-            color: #333;
-            margin-bottom: 24px;
-            font-size: 24px;
-        }
-        .login-container input {
+        
+        .login-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
-            padding: 12px;
-            margin-bottom: 16px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 14px;
-            box-sizing: border-box;
+            height: 6px;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6, #10b981);
         }
-        .login-container input:focus {
-            border-color: #6B8EFF; /* 上游节点浅蓝色 */
+        
+        /* 系统标识 */
+        .system-brand {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .system-icon {
+            font-size: 3.5rem;
+            color: #3b82f6;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .system-name {
+            font-size: 1.8rem;
+            color: #1e293b;
+            font-weight: 700;
+            margin-bottom: 5px;
+            letter-spacing: 0.5px;
+        }
+        
+        .system-subtitle {
+            color: #64748b;
+            font-size: 1rem;
+            font-weight: 400;
+        }
+        
+        /* 表单标题 */
+        .form-title {
+            font-size: 1.6rem;
+            color: #1e293b;
+            margin-bottom: 30px;
+            font-weight: 600;
+            position: relative;
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+        
+        .form-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 25%;
+            width: 50%;
+            height: 3px;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            border-radius: 2px;
+        }
+        
+        /* 消息提示 */
+        .message {
+            padding: 14px 18px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            text-align: left;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .error-message {
+            background-color: #fef2f2;
+            color: #dc2626;
+            border-left: 4px solid #dc2626;
+        }
+        
+        .success-message {
+            background-color: #f0fdf4;
+            color: #16a34a;
+            border-left: 4px solid #16a34a;
+        }
+        
+        /* 表单样式 */
+        .login-form {
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 22px;
+            position: relative;
+        }
+        
+        .form-group i {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            font-size: 1.1rem;
+            transition: color 0.3s ease;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 16px 16px 16px 50px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1rem;
+            color: #334155;
+            background-color: #f8fafc;
+            transition: all 0.3s ease;
+        }
+        
+        .form-input:focus {
             outline: none;
+            border-color: #3b82f6;
+            background-color: white;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
         }
-        .login-container button {
+        
+        .form-input:focus + i {
+            color: #3b82f6;
+        }
+        
+        .form-input::placeholder {
+            color: #94a3b8;
+        }
+        
+        /* 登录按钮 */
+        .login-button {
             width: 100%;
-            padding: 12px;
-            background-color: #6B8EFF; /* 上游节点浅蓝色 */
-            color: #fff;
+            padding: 16px;
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            color: white;
             border: none;
-            border-radius: 4px;
-            font-size: 16px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
         }
-        .login-container button:hover {
-            background-color: #4A7DFF; /* 深蓝色 */
+        
+        .login-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
         }
-        .login-container a {
-            display: block;
-            margin-top: 16px;
-            color: #6B8EFF; /* 上游节点浅蓝色 */
+        
+        .login-button:active {
+            transform: translateY(0);
+        }
+        
+        /* 链接区域 */
+        .links-container {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 25px;
+        }
+        
+        .link {
+            color: #64748b;
             text-decoration: none;
-            font-size: 14px;
+            font-size: 0.95rem;
+            transition: color 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
-        .login-container a:hover {
-            text-decoration: underline;
+        
+        .link:hover {
+            color: #3b82f6;
         }
-        .logo {
-            margin-bottom: 24px;
-            font-size: 32px;
-            color: #333;
-            font-weight: bold;
+        
+        .link i {
+            font-size: 0.9rem;
+        }
+        
+        .register-link {
+            color: #3b82f6;
+            font-weight: 600;
+        }
+        
+        /* 底部装饰 */
+        .login-footer {
+            margin-top: 35px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+        
+        /* 动画 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 576px) {
+            body {
+                padding: 15px;
+            }
+            
+            .login-container {
+                padding: 40px 30px;
+            }
+            
+            .system-name {
+                font-size: 1.6rem;
+            }
+            
+            .form-title {
+                font-size: 1.4rem;
+            }
+            
+            .links-container {
+                flex-direction: column;
+                align-items: center;
+                gap: 12px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="login-container">
-        <div class="logo">清华附中冬令营实训系统</div>
-        <h1>欢迎登录</h1>
+        <!-- 系统标识 -->
+        <div class="system-brand">
+            <div class="system-icon">
+                <i class="fas fa-snowflake"></i>
+            </div>
+            <div class="system-name">清华附中-奇安信智能安全科技冬令营实训系统</div>
+            <div class="system-subtitle">登录以开始您的学习之旅</div>
+        </div>
         
+        <h2 class="form-title">欢迎登录</h2>
+        
+        <!-- 消息提示 -->
         {% if error %}
-        <div style="color: red; margin-bottom: 16px; font-size: 14px; background-color: #ffe6e6; padding: 10px; border-radius: 4px;">
-            {{ error }}
+        <div class="message error-message">
+            <i class="fas fa-exclamation-circle"></i>
+            <span>{{ error }}</span>
         </div>
         {% endif %}
         
         {% if success %}
-        <div style="color: green; margin-bottom: 16px; font-size: 14px; background-color: #e6ffe6; padding: 10px; border-radius: 4px;">
-            {{ success }}
+        <div class="message success-message">
+            <i class="fas fa-check-circle"></i>
+            <span>{{ success }}</span>
         </div>
         {% endif %}
         
-        <form id="login-form" method="POST" action="/login">
-            <input type="text" id="username" name="username" placeholder="用户名" required>
-            <input type="password" id="password" name="password" placeholder="密码" required>
-            <button type="submit">登录</button>
+        <!-- 登录表单 -->
+        <form id="login-form" method="POST" action="/login" class="login-form">
+            <div class="form-group">
+                <i class="fas fa-user"></i>
+                <input type="text" id="username" name="username" class="form-input" placeholder="请输入用户名" required>
+            </div>
+            
+            <div class="form-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="password" name="password" class="form-input" placeholder="请输入密码" required>
+            </div>
+            
+            <button type="submit" class="login-button">
+                <i class="fas fa-sign-in-alt"></i> 登录系统
+            </button>
         </form>
-        <a href="/register">还没有账号？立即注册</a>
-        <a href="#">忘记密码？</a>
+        
+        <!-- 链接区域 -->
+        <div class="links-container">
+            <a href="/register" class="link register-link">
+                <i class="fas fa-user-plus"></i> 还没有账号？立即注册
+            </a>
+            <a href="#" class="link">
+                <i class="fas fa-key"></i> 忘记密码？
+            </a>
+        </div>
+        
+        <!-- 底部信息 -->
+        <div class="login-footer">
+            <p>清华附中-奇安信智能安全科技冬令营实训系统 © 2026 版权所有</p>
+        </div>
     </div>
+
+    <script>
+        // 添加表单交互效果
+        document.addEventListener('DOMContentLoaded', function() {
+            const inputs = document.querySelectorAll('.form-input');
+            const form = document.getElementById('login-form');
+            
+            // 输入框聚焦效果
+            inputs.forEach(input => {
+                input.addEventListener('focus', function() {
+                    this.parentElement.classList.add('focused');
+                });
+                
+                input.addEventListener('blur', function() {
+                    if (this.value === '') {
+                        this.parentElement.classList.remove('focused');
+                    }
+                });
+                
+                // 如果输入框已有内容，添加filled类
+                if (input.value !== '') {
+                    input.parentElement.classList.add('filled');
+                }
+            });
+            
+            // 表单提交动画
+            form.addEventListener('submit', function(e) {
+                const button = this.querySelector('.login-button');
+                button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 登录中...';
+                button.disabled = true;
+            });
+            
+            // 添加键盘快捷键支持
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && !e.target.matches('button, a')) {
+                    const submitButton = document.querySelector('.login-button');
+                    if (submitButton) {
+                        submitButton.click();
+                    }
+                }
+            });
+        });
+    </script>
 </body>
 </html>
