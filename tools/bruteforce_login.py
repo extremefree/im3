@@ -37,7 +37,7 @@ def iter_pin6(start: int = 0):
 def main():
     parser = argparse.ArgumentParser(description='Online brute-force demo (for classroom local lab only).')
     parser.add_argument('--host', default='127.0.0.1')
-    parser.add_argument('--port', default=5051, type=int)
+    parser.add_argument('--port', default=8080, type=int)
     parser.add_argument('--username', required=True)
     parser.add_argument('--mode', choices=['pin4', 'pin6'], default='pin6')
     parser.add_argument('--max', type=int, default=500, help='Max attempts (default: 500)')
