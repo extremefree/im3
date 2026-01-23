@@ -17,7 +17,7 @@ USERINFO_CSV_PATH = os.path.join(BASE_DIR, 'data', 'userinfo.csv')
 # ======================= 实验开关（给学生改造用） =======================
 # TODO(实验任务): 打开/完善这些开关与函数，实现“登录防御”并做前后对比复测
 STORE_HASHED_PASSWORDS = True
-HIDE_ENUMERATION_ERRORS = False
+HIDE_ENUMERATION_ERRORS = True
 # =====================================================================
 
 ### 从CSV文件读取用户数据的函数###
@@ -200,6 +200,8 @@ def validate_register_form(username, password, password_confirm):
         if password != password_confirm:
             return False, '两次输入的密码不一致'
         return True, None   # 返回True表示验证成功，None表示没有错误    
+    
+    
 
 @app.route('/register', methods=['POST'])
 def register():
