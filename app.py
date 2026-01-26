@@ -118,8 +118,8 @@ def evaluate_password_strength(password: str, username: Optional[str]) -> Tuple[
 # =============== 在线爆破防护：限速/退避/锁定 =================
 # 防护配置（可以修改这些参数来调整防护强度）
 FAILED_LOGIN_STATE = {}  # 存储失败记录
-MAX_ATTEMPTS = 5  # 最大允许失败次数
-LOCKOUT_DURATION = 30  # 锁定时长（秒）
+MAX_ATTEMPTS = 3 # 最大允许失败次数
+LOCKOUT_DURATION = 100  # 锁定时长（秒）
 
 
 def get_client_ip() -> str:
@@ -134,21 +134,21 @@ def calculate_fail_count(username: str, ip: str) -> int:
     """
     任务1：计算某个用户+IP组合已经失败了多少次
     """
-    pass
+    return 0
 
 
 def should_be_locked(fail_count: int) -> bool:
     """
     任务2：判断是否应该被锁定
     """
-    pass
+    return False
 
 
 def calculate_remaining_lockout_time(last_fail_time: float, current_time: float) -> int:
     """
     任务3：计算还需要等待多少秒才能解锁
     """
-    pass
+    return 0
 
 # =================== TODO 结束 ===================
 
