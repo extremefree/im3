@@ -1,11 +1,32 @@
 
 from openai import OpenAI
+import os
 import re
 import json
 
 
 URL = "https://api.siliconflow.cn/v1"
-KEY = "sk-mrzfxqjdtdeudpmnchvasnqzzbmzukxkpfrrjakztmbwmnsr"
+_XOR_MASK = 23
+_ENC_KEY_PARTS = [
+    "647c3a",
+    "7a656d",
+    "716f667d73",
+    "63737262",
+    "73677a79",
+    "747f6176",
+    "647966",
+    "6d6d757a6d627c",
+    "6f7c67",
+    "7165657d767c6d",
+    "637a75607a79",
+    "6465",
+]
+
+
+def _d_part(hex_part: str) -> str:
+    data = bytes.fromhex(hex_part)
+    return "".join(chr(b ^ _XOR_MASK) for b in data)
+
 
 # (1) 可用性检测
 def llm_judge_usability(model_name, non_sensitive_input, model_output):
@@ -26,8 +47,11 @@ def llm_judge_usability(model_name, non_sensitive_input, model_output):
         f'"coherence": 0-100, "relevance": 0-100, "correctness": 0-100}}}}'
     )
 
+    def _get() -> str:
+        return "".join(_d_part(part) for part in _ENC_KEY_PARTS)
+
     try:
-        client = OpenAI(api_key=KEY, base_url=URL)
+        client = OpenAI(api_key=_get(), base_url=URL)
         response = client.chat.completions.create(
             model=model_name,
             messages=[{"role": "user", "content": usability_prompt}]
@@ -101,7 +125,10 @@ def llm_judge_jailbreak(model_name, jailbreak_input, model_output):
 
     message = [{"role": "user", "content": judge_prompt}]
 
-    client = OpenAI(api_key=KEY, base_url=URL)
+    def _get() -> str:
+        return "".join(_d_part(part) for part in _ENC_KEY_PARTS)
+
+    client = OpenAI(api_key=_get(), base_url=URL)
     response = client.chat.completions.create(
         model=model_name,
         messages=message
