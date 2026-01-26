@@ -134,23 +134,29 @@ def calculate_fail_count(username: str, ip: str) -> int:
     """
     任务1：计算某个用户+IP组合已经失败了多少次
     """
-    pass
+    key = f"{username}:{ip}"
+    if key not in FAILED_LOGIN_STATE:
+        return 0
+    return FAILED_LOGIN_STATE[key].get('attempts', 0)
 
 
 def should_be_locked(fail_count: int) -> bool:
     """
     任务2：判断是否应该被锁定
     """
-    pass
+    return fail_count >= MAX_ATTEMPTS
 
 
 def calculate_remaining_lockout_time(last_fail_time: float, current_time: float) -> int:
     """
     任务3：计算还需要等待多少秒才能解锁
     """
-    pass
+    unlock_time = last_fail_time + LOCKOUT_DURATION
+    remaining = unlock_time - current_time
+    return max(0, int(remaining))
 
 # =================== TODO 结束 ===================
+
 
 # 下面的代码已经写好了，会调用你实现的3个函数
 def check_login_throttle(username: str, ip: str) -> Tuple[bool, int, Optional[str]]:
