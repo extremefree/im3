@@ -162,6 +162,21 @@
             line-height: 1.6;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         }
+
+        .message-time {
+            margin-top: 8px;
+            font-size: 0.8rem;
+            text-align: right;
+            opacity: 0.8;
+        }
+
+        .message.user .message-time {
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        .message.bot .message-time {
+            color: #64748b;
+        }
         
         .message.user .message-content {
             background: linear-gradient(135deg, #10b981 0%, #059669 100%);
@@ -348,51 +363,6 @@
             color: #64748b;
         }
         
-        .progress-stats {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-            margin-top: 10px;
-        }
-        
-        .stat-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 12px 20px;
-            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-            border-radius: 12px;
-            border: 1px solid #e2e8f0;
-            min-width: 120px;
-        }
-        
-        .stat-label {
-            font-size: 0.85rem;
-            color: #64748b;
-            margin-bottom: 5px;
-        }
-        
-        .stat-value {
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: #1e293b;
-        }
-        
-        .stat-score {
-            color: #10b981;
-        }
-        
-        .stat-tests {
-            color: #4facfe;
-        }
-        
-        .stat-passed {
-            color: #10b981;
-        }
-        
-        .stat-failed {
-            color: #ef4444;
-        }
         
         /* 返回按钮 */
         .back-button {
@@ -455,14 +425,6 @@
                 height: 450px;
             }
             
-            .progress-stats {
-                flex-direction: column;
-                gap: 10px;
-            }
-            
-            .stat-item {
-                width: 100%;
-            }
         }
         
         @media (max-width: 576px) {
@@ -573,9 +535,6 @@
                 <span id="progressScore">分数: -</span>
             </div>
             
-            <div class="progress-stats" id="progressStats">
-                <!-- 统计数据将通过JavaScript动态插入 -->
-            </div>
         </div>
 
         <!-- 返回按钮 -->
@@ -590,6 +549,30 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
     
     <script>
+        function formatTwoDigits(value) {
+            return value.toString().padStart(2, '0');
+        }
+
+        function getCurrentTimeString() {
+            const now = new Date();
+            const hours = formatTwoDigits(now.getHours());
+            const minutes = formatTwoDigits(now.getMinutes());
+            const seconds = formatTwoDigits(now.getSeconds());
+            return `${hours}:${minutes}:${seconds}`;
+        }
+
+        function ensureMessageTime(contentDiv) {
+            const existingTime = contentDiv.querySelector('.message-time');
+            if (!existingTime) {
+                const timeDiv = document.createElement('div');
+                timeDiv.className = 'message-time';
+                timeDiv.textContent = getCurrentTimeString();
+                contentDiv.appendChild(timeDiv);
+            } else if (!existingTime.textContent.trim()) {
+                existingTime.textContent = getCurrentTimeString();
+            }
+        }
+
         // 页面加载完成后的初始化
         document.addEventListener('DOMContentLoaded', function() {
             // 自动聚焦到输入框
@@ -611,6 +594,8 @@
             // 添加输入框回车键监听
             const input = document.getElementById('messageInput');
             input.addEventListener('keypress', handleKeyPress);
+
+            document.querySelectorAll('.message-content').forEach(ensureMessageTime);
         });
 
         function sendMessage() {
@@ -672,6 +657,7 @@
             // 处理文本中的换行符
             const formattedText = text.replace(/\n/g, '<br>');
             contentDiv.innerHTML = formattedText;
+            ensureMessageTime(contentDiv);
 
             messageDiv.appendChild(contentDiv);
             chatMessages.appendChild(messageDiv);
@@ -786,10 +772,6 @@
                 document.getElementById('progressText').textContent = '准备测试...';
                 document.getElementById('progressScore').textContent = '分数: -';
                 
-                // 重置统计区域
-                const statsContainer = document.getElementById('progressStats');
-                statsContainer.innerHTML = '';
-                
                 addMessage('🧪 开始可用性检测...', 'bot');
 
                 const eventSource = new EventSource('/api/chatbot/test-usability-stream');
@@ -800,25 +782,6 @@
                     if (data.type === 'start') {
                         document.getElementById('progressText').textContent = `总共 ${data.total} 个测试用例`;
                         
-                        // 创建统计卡片
-                        statsContainer.innerHTML = `
-                            <div class="stat-item">
-                                <div class="stat-label">总测试数</div>
-                                <div class="stat-value stat-tests">${data.total}</div>
-                            </div>
-                            <div class="stat-item">
-                                <div class="stat-label">通过数</div>
-                                <div class="stat-value stat-passed">0</div>
-                            </div>
-                            <div class="stat-item">
-                                <div class="stat-label">失败数</div>
-                                <div class="stat-value stat-failed">0</div>
-                            </div>
-                            <div class="stat-item">
-                                <div class="stat-label">平均分数</div>
-                                <div class="stat-value stat-score">0.0</div>
-                            </div>
-                        `;
                     } else if (data.type === 'progress') {
                         progressBar.style.width = data.percent + '%';
                         progressBar.textContent = data.percent + '%';
@@ -826,18 +789,6 @@
                             `进度: ${data.current}/${data.total}`;
                         document.getElementById('progressScore').textContent =
                             `分数: ${data.last_score}`;
-                        
-                        // 更新统计信息
-                        if (data.current > 0) {
-                            const avgScore = data.average_score || 0;
-                            const passed = Math.round(data.current * (data.average_score || 0) / 100);
-                            const failed = data.current - passed;
-                            
-                            document.querySelector('.stat-tests').textContent = data.total;
-                            document.querySelector('.stat-passed').textContent = passed;
-                            document.querySelector('.stat-failed').textContent = failed;
-                            document.querySelector('.stat-score').textContent = avgScore.toFixed(1);
-                        }
                         
                         // 添加脉冲动画
                         progressBar.style.animation = 'pulse 0.5s ease';
@@ -865,12 +816,6 @@
                             ${getDefenseAssessment(data.average_quality_score)}`;
                         addMessage(summary, 'bot');
                         
-                        // 更新最终统计
-                        document.querySelector('.stat-tests').textContent = data.total_tests;
-                        document.querySelector('.stat-passed').textContent = data.passed_tests;
-                        document.querySelector('.stat-failed').textContent = data.failed_tests;
-                        document.querySelector('.stat-score').textContent = data.average_quality_score;
-
                         setTimeout(() => {
                             progressContainer.style.display = 'none';
                         }, 5000);

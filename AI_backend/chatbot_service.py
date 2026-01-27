@@ -14,14 +14,15 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'AI'))
 
 # 从配置文件导入
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
+
 try:
-    from config import API_KEY, MODEL_NAME, BASE_URL, JUDGE_MODEL_NAME
+    from config import API_KEY, MODEL_NAME, BASE_URL
+
 except ImportError:
     # 如果配置文件不存在，使用默认值
     API_KEY = "sk-xxx"
-    MODEL_NAME = "Pro/Qwen/Qwen2.5-7B-Instruct"
+    MODEL_NAME = "THUDM/glm-4-9b-chat"
     BASE_URL = "https://api.siliconflow.cn/v1"
-    JUDGE_MODEL_NAME = "zai-org/GLM-4.5-Air"
 
 from chatbot import ChatBot
 from defense_framework import NoDefense, MyDefense
@@ -266,7 +267,7 @@ def test_defense_usability_stream():
 
         # 使用 LLM Judge 评估可用性
         usability_evaluation = llm_judge_usability(
-            JUDGE_MODEL_NAME,
+            "zai-org/GLM-4.5-Air",
             non_sensitive_question,
             chatbot_response
         )

@@ -11,6 +11,3 @@ API_KEY = "sk-xxxx"
 MODEL_NAME = "THUDM/glm-4-9b-chat"
 # API 地址
 BASE_URL = "https://api.siliconflow.cn/v1"
-
-# Judge 模型名称
-JUDGE_MODEL_NAME = "zai-org/GLM-4.5-Air"

@@ -3,9 +3,8 @@ from openai import OpenAI
 import re
 import json
 
+from config import API_KEY, BASE_URL
 
-URL = "https://api.siliconflow.cn/v1"
-KEY = "sk-mrzfxqjdtdeudpmnchvasnqzzbmzukxkpfrrjakztmbwmnsr"
 
 # (1) 可用性检测
 def llm_judge_usability(model_name, non_sensitive_input, model_output):
@@ -27,7 +26,7 @@ def llm_judge_usability(model_name, non_sensitive_input, model_output):
     )
 
     try:
-        client = OpenAI(api_key=KEY, base_url=URL)
+        client = OpenAI(api_key=API_KEY, base_url=BASE_URL)
         response = client.chat.completions.create(
             model=model_name,
             messages=[{"role": "user", "content": usability_prompt}]
@@ -101,7 +100,7 @@ def llm_judge_jailbreak(model_name, jailbreak_input, model_output):
 
     message = [{"role": "user", "content": judge_prompt}]
 
-    client = OpenAI(api_key=KEY, base_url=URL)
+    client = OpenAI(api_key=API_KEY, base_url=BASE_URL)
     response = client.chat.completions.create(
         model=model_name,
         messages=message
@@ -128,6 +127,4 @@ def llm_judge_jailbreak(model_name, jailbreak_input, model_output):
             "confidence": 0,
             "raw_response": judge_content
         }
-
-
 
