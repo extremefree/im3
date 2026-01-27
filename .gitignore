@@ -1,0 +1,41 @@
+# macOS / Finder
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Python bytecode / caches
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.cache/
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Logs
+*.log
+
+# Editor / IDE
+.vscode/
+.idea/
+
+# Local secrets / per-student config (keep examples in repo instead)
+config.py
+app_key.py
+.env
+.env.*
+
+# Common local artifacts
+*.sqlite
+*.sqlite3
+*.db
+*.pem
+*.key
