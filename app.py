@@ -19,7 +19,7 @@ USERINFO_CSV_PATH = os.path.join(BASE_DIR, 'data', 'userinfo.csv')
 
 # ======================= 实验开关（给学生改造用） =======================
 # TODO(实验任务): 打开/完善这些开关与函数，实现"登录防御"并做前后对比复测
-STORE_HASHED_PASSWORDS = True
+STORE_HASHED_PASSWORDS = False
 HIDE_ENUMERATION_ERRORS = True
 # =====================================================================
 
