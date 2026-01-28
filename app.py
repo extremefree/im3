@@ -105,16 +105,6 @@ def verify_password(stored_password: str, input_password: str) -> bool:
     return stored_password == input_password
 
 
-def evaluate_password_strength(password: str, username: Optional[str]) -> Tuple[bool, Optional[str]]:
-    """
-    TODO(实验任务): 将这里升级为“口令强度评价器/策略”
-    建议规则：长度优先(>=12)；字符多样性；禁止包含用户名；弱口令黑名单；拒绝常见模式(123456/111111/qwerty)
-    """
-    if len(password) < 6:
-        return False, '密码至少需要6个字符'
-    return True, None
-
-
 # =============== 在线爆破防护：限速/退避/锁定 =================
 # 防护配置（可以修改这些参数来调整防护强度）
 FAILED_LOGIN_STATE = {}  # 存储失败记录
@@ -132,11 +122,29 @@ def get_client_ip() -> str:
 
 def calculate_fail_count(username: str, ip: str) -> int:
     """
-    任务1：计算某个用户+IP组合已经失败了多少次
+    任务1（只需阅读理解）：计算某个用户+IP组合已经失败了多少次
     """
-    return 0
+    # 以 username:ip 为键，查询该用户+IP组合的失败记录
+    key = f"{username}:{ip}"
+    # 如果该组合在失败状态表中不存在，说明没有失败过，返回0
+    if key not in FAILED_LOGIN_STATE:
+        return 0
+    # 存在则返回记录中的尝试次数（默认为0）
+    return FAILED_LOGIN_STATE[key].get('attempts', 0)
 
 
+def evaluate_password_strength(password: str, username: Optional[str]) -> Tuple[bool, Optional[str]]:
+    """
+    TODO(原为扩展实验任务，现替换第一个实验认为为必做): 将这里升级为“口令强度评价器/策略”
+    建议规则：长度优先(>=12)；字符多样性；禁止包含用户名；弱口令黑名单；拒绝常见模式(123456/111111/qwerty)
+    
+    要求：可以在此基础上多增加一些if条件判断，提示，可以通过判断是否口令中存在有关用户名的信息来拦截
+    """
+    if len(password) < 6:
+        return False, '密码至少需要6个字符'
+    return True, None
+
+    
 def should_be_locked(fail_count: int) -> bool:
     """
     任务2：判断是否应该被锁定
@@ -283,7 +291,6 @@ def register_page():
 
 ### 注册处理###
 
-# TODO(实验任务): 口令强度检测
 def validate_register_form(username, password, password_confirm):
     if not username or not password:
         return False, '用户名和密码不能为空'
