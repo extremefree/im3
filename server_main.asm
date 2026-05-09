@@ -714,30 +714,30 @@ main:
 
     ; ---- 断开连接 ----
 .do_disconnect:
-    mov     ecx, [r13 + CS_FD]
+    mov     r14d, [r13 + CS_FD]
 
     ; 从 master_set 移除
-    mov     A1, rcx
+    mov     A1, r14
     lea     A2, [master_set]
     PREP_CALL
     call    plat_fd_clr
     POST_CALL
 
-    ; 清空客户端槽位
-    mov     dword [r13 + CS_FD], -1
-    mov     dword [r13 + CS_BUF_LEN], 0
-
     ; auth_remove_session
-    mov     A1, rcx
+    mov     A1, r14
     PREP_CALL
     call    auth_remove_session
     POST_CALL
 
     ; 关闭 fd
-    mov     A1, rcx
+    mov     A1, r14
     PREP_CALL
     call    plat_close
     POST_CALL
+
+    ; 清空客户端槽位
+    mov     dword [r13 + CS_FD], -1
+    mov     dword [r13 + CS_BUF_LEN], 0
 
     ; 日志
     mov     A1, msg_left
