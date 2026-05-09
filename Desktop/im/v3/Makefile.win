@@ -1,0 +1,39 @@
+# ================================================================
+# Makefile.win — v3 聊天系统 Windows 版
+#
+# 用法（在 PowerShell 中）：
+#   mingw32-make -f Makefile.win        → 编译
+#   mingw32-make -f Makefile.win clean   → 清理
+#
+# 依赖：nasm, gcc (MinGW-W64 x86_64), mingw32-make
+# ================================================================
+
+CC      = D:\gcc\mingw64\bin\gcc.exe
+NASM    = nasm
+CFLAGS  = -O2 -fno-stack-protector -g
+NASMFLAGS = -f win64 -g -d_WIN32
+
+SERVER_OBJS = server_main.obj buffer.obj net_utils.obj auth.obj platform.obj
+CLIENT_OBJS = client_main.obj net_utils.obj platform.obj
+
+.PHONY: all clean
+
+all: server.exe client.exe
+
+# ---- 编译 ASM (win64 format) ----
+%.obj: %.asm calling.inc
+	$(NASM) $(NASMFLAGS) $< -o $@
+
+# ---- 编译 C ----
+%.obj: %.c platform.h
+	$(CC) $(CFLAGS) -c $< -o $@
+
+# ---- 链接 ----
+server.exe: $(SERVER_OBJS)
+	$(CC) -g -o $@ $^ -lws2_32
+
+client.exe: $(CLIENT_OBJS)
+	$(CC) -g -o $@ $^ -lws2_32
+
+clean:
+	del /Q *.obj server.exe client.exe 2>nul
