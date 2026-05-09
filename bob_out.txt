@@ -1,0 +1,4 @@
+[cli] connecting...
+[cli] connected
+Welcome! Please login: LOGIN name:pass
+OK logged in
