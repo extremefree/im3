@@ -1,0 +1,10 @@
+# 编译产物
+*.obj
+*.o
+*.exe
+server
+client
+
+# 运行时数据
+im_users.dat
+*.txt

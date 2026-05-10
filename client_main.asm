@@ -273,42 +273,9 @@ main:
 
     mov     r14d, eax           ; stdin bytes read
 
-    ; 未登录时，把 stdin 当 LOGIN name:pass 发送
+    ; 未登录或已登录，均直接发送原始输入
     cmp     dword [logged_in], 0
     jne     .send_raw
-
-    ; 自动封装为 LOGIN name:pass\n
-    ; send_buf 中用户输入的是 "name:pass"
-    ; 拼装到 login_buf: "LOGIN " + send_buf + "\n"
-    lea     rdi, [login_buf]
-    lea     rsi, [str_login_pfx]
-    mov     ecx, 6
-    rep     movsb
-    lea     rsi, [send_buf]
-    ; 去掉末尾 \n 或 \r
-    mov     ecx, r14d
-    dec     ecx
-    cmp     byte [rsi + rcx], 10
-    jne     .no_trail
-    dec     r14d
-.no_trail:
-    mov     ecx, r14d
-    rep     movsb
-    mov     byte [rdi], 10
-    inc     rdi
-    lea     rax, [login_buf]
-    sub     rdi, rax
-    mov     r14d, edi
-
-    ; 发送 login_buf
-    mov     A1, [sock_fd]
-    lea     A2, [login_buf]
-    mov     eax, r14d
-    mov     A3, rax
-    PREP_CALL
-    call    plat_write
-    POST_CALL
-    jmp     .main_loop
 
 .send_raw:
     ; 直接发送 stdin 内容

@@ -81,7 +81,7 @@ msg_left_len     equ $ - msg_left
 msg_full         db  "[server] refused: too many clients", 10
 msg_full_len     equ $ - msg_full
 
-msg_need_login   db  "Welcome! Please login: LOGIN name:pass", 10
+msg_need_login   db  "Welcome! LOGIN name:pass  or  /REGISTER name:pass", 10
 msg_need_login_len equ $ - msg_need_login
 
 msg_login_ok     db  "OK logged in", 10
