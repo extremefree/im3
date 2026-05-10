@@ -1,0 +1,25 @@
+# Makefile.win — v4 Windows (COFF64/Win64)
+CC      = D:\gcc\mingw64\bin\gcc.exe
+NASM    = nasm
+NASMFLAGS = -f win64 -d_WIN32
+CFLAGS  = -O2 -Wall -g -D_WIN32
+LDFLAGS = -lws2_32 -lbcrypt "-Wl,--image-base=0x10000000"
+
+all: server.exe client.exe
+
+server.exe: server_main.obj x25519.obj crypto.obj buffer.obj net_utils.obj platform.obj auth_v4.obj
+	$(CC) $(LDFLAGS) -o $@ $^
+
+client.exe: client_main.obj x25519.obj crypto.obj net_utils.obj platform.obj
+	$(CC) $(LDFLAGS) -o $@ $^
+
+%.obj: %.asm
+	$(NASM) $(NASMFLAGS) -o $@ $<
+
+%.obj: %.c
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+clean:
+	del /Q *.obj *.exe 2>NUL || true
+
+.PHONY: all clean
