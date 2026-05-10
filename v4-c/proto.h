@@ -13,6 +13,7 @@
 #define PKT_ANNOUNCE    0x07
 #define PKT_PING        0x08
 #define PKT_PONG        0x09
+#define PKT_LOGOUT      0x0A
 
 /* ---- ACK 结果码（存在 flags 字段）---- */
 #define ACK_OK          0x00

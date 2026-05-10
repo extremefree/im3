@@ -181,6 +181,7 @@ int main(int argc, char **argv) {
             uint8_t type  = hdr.type;
             uint16_t plen = hdr.len;
 
+
             if (plen > NONCE_LEN + MAX_PAYLOAD) {
                 disconnect(cs, fds); continue;
             }
@@ -202,7 +203,6 @@ int main(int argc, char **argv) {
             }
             /* 确保 content 以 \0 结尾（便于字符串操作）*/
             content[content_len] = '\0';
-
             switch (type) {
             case PKT_HELLO: {
                 if (plen != PUBKEY_LEN) break;
@@ -249,6 +249,13 @@ int main(int argc, char **argv) {
                     uint8_t code = ACK_ERR_EXIST;
                     send_encrypted(cs, PKT_ACK, &code, 1);
                 }
+                break;
+            }
+            case PKT_LOGOUT: {
+                auth_logout(cs->fd);
+                cs->flags &= ~CSF_LOGGED_IN;
+                uint8_t code = ACK_OK;
+                send_encrypted(cs, PKT_ACK, &code, 1);
                 break;
             }
             case PKT_MSG: {

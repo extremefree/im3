@@ -136,49 +136,57 @@ int main(int argc, char **argv) {
     static uint8_t line_buf[2048];
     static uint8_t payload_buf[NONCE_LEN + MAX_PAYLOAD + 64];
     static uint8_t send_buf[MAX_PAYLOAD];
+    int stdin_closed = 0;
 
     for (;;) {
         plat_fd_zero(fds);
         plat_fd_set(g_sock, fds);
-        plat_client_add_stdin(fds);
+        if (!stdin_closed) plat_client_add_stdin(fds);
 
-        if (plat_select(1024, fds) <= 0) continue;
+        int sel = plat_select(1024, fds);
+        if (sel < 0) break;  /* error */
 
-        /* stdin 就绪 */
-        if (plat_stdin_ready(fds)) {
+        /* stdin 就绪（握手完成后才处理命令）
+         * Windows 上 stdin 不在 fd_set，每轮都需独立检查（sel==0 时也要查）*/
+        if (!stdin_closed && g_handshaked && plat_stdin_ready(fds)) {
             int n = plat_read_stdin(line_buf, sizeof(line_buf) - 1);
-            if (n <= 0) break;
-            if (line_buf[n-1] == '\n') n--;
-            line_buf[n] = '\0';
-            if (n == 0) continue;
-
-            char *line = (char *)line_buf;
-
-            if (strncmp(line, "mail ", 5) == 0) {
-                /* mail -o X -m Y */
-                char to[64], text[MAX_PAYLOAD - 80];
-                if (parse_mail(line + 5, to, text) != 0) continue;
-                int tlen = (int)strlen(to);
-                int msglen = (int)strlen(text);
-                memcpy(send_buf, to, tlen);
-                send_buf[tlen] = '\0';
-                memcpy(send_buf + tlen + 1, text, msglen);
-                send_encrypted(PKT_MAIL, send_buf, tlen + 1 + msglen);
-
-            } else if (strncmp(line, "LOGIN ", 6) == 0) {
-                int len = build_login_payload(send_buf, line + 6);
-                if (len <= 0) continue;
-                send_encrypted(PKT_LOGIN, send_buf, len);
-
-            } else if (strncmp(line, "REGISTER ", 9) == 0) {
-                int len = build_login_payload(send_buf, line + 9);
-                if (len <= 0) continue;
-                send_encrypted(PKT_REGISTER, send_buf, len);
-
+            if (n <= 0) {
+                stdin_closed = 1;
             } else {
-                send_encrypted(PKT_MSG, line, n);
+                /* 去掉行尾 \r\n */
+                if (n > 0 && line_buf[n-1] == '\n') n--;
+                if (n > 0 && line_buf[n-1] == '\r') n--;
+                line_buf[n] = '\0';
+
+                char *line = (char *)line_buf;
+
+                if (n > 0 && strncmp(line, "mail ", 5) == 0) {
+                    /* mail -o X -m Y */
+                    char to[64], text[MAX_PAYLOAD - 80];
+                    if (parse_mail(line + 5, to, text) == 0) {
+                        int tlen = (int)strlen(to);
+                        int msglen = (int)strlen(text);
+                        memcpy(send_buf, to, tlen);
+                        send_buf[tlen] = '\0';
+                        memcpy(send_buf + tlen + 1, text, msglen);
+                        send_encrypted(PKT_MAIL, send_buf, tlen + 1 + msglen);
+                    }
+                } else if (n > 0 && strncmp(line, "LOGIN ", 6) == 0) {
+                    int len = build_login_payload(send_buf, line + 6);
+                    if (len > 0) send_encrypted(PKT_LOGIN, send_buf, len);
+                } else if (n > 0 && strncmp(line, "REGISTER ", 9) == 0) {
+                    int len = build_login_payload(send_buf, line + 9);
+                    if (len > 0) send_encrypted(PKT_REGISTER, send_buf, len);
+                } else if (n > 0 && strcmp(line, "LOGOUT") == 0) {
+                    send_encrypted(PKT_LOGOUT, NULL, 0);
+                } else if (n > 0) {
+                    send_encrypted(PKT_MSG, line, n);
+                }
             }
         }
+
+        /* sel==0 且 stdin 已关闭：没有更多数据，退出 */
+        if (sel == 0 && stdin_closed) break;
 
         /* 服务器数据 */
         if (plat_fd_isset(g_sock, fds)) {

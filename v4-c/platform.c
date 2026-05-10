@@ -90,10 +90,16 @@ int plat_listen(int fd, int backlog) {
 
 int plat_accept(int fd, void *addr, void *addrlen) {
 #ifdef _WIN32
-    int al = *(int*)addrlen;
-    int r = (int)accept((SOCKET)fd, (struct sockaddr*)addr, &al);
-    *(int*)addrlen = al;
-    return r;
+    if (addr == NULL) {
+        int r = (int)accept((SOCKET)fd, NULL, NULL);
+        return r;
+    } else {
+        int al_local = 28;
+        int *alp = addrlen ? (int*)addrlen : &al_local;
+        int r = (int)accept((SOCKET)fd, (struct sockaddr*)addr, alp);
+        if (addrlen) *(int*)addrlen = *alp;
+        return r;
+    }
 #else
     return (int)accept(fd, (struct sockaddr*)addr, (socklen_t*)addrlen);
 #endif
@@ -120,17 +126,49 @@ void plat_close(int fd) {
  * ================================================================ */
 int plat_read(int fd, void *buf, int len) {
 #ifdef _WIN32
-    return (int)recv((SOCKET)fd, (char*)buf, len, 0);
+    char *p = (char*)buf;
+    int rem = len;
+    while (rem > 0) {
+        int r = (int)recv((SOCKET)fd, p, rem, 0);
+        if (r <= 0) return -1;
+        p   += r;
+        rem -= r;
+    }
+    return len;
 #else
-    return (int)read(fd, buf, (size_t)len);
+    char *p = (char*)buf;
+    int rem = len;
+    while (rem > 0) {
+        int r = (int)read(fd, p, (size_t)rem);
+        if (r <= 0) return -1;
+        p   += r;
+        rem -= r;
+    }
+    return len;
 #endif
 }
 
 int plat_write(int fd, const void *buf, int len) {
 #ifdef _WIN32
-    return (int)send((SOCKET)fd, (const char*)buf, len, 0);
+    const char *p = (const char*)buf;
+    int rem = len;
+    while (rem > 0) {
+        int r = (int)send((SOCKET)fd, p, rem, 0);
+        if (r <= 0) return -1;
+        p   += r;
+        rem -= r;
+    }
+    return len;
 #else
-    return (int)write(fd, buf, (size_t)len);
+    const char *p = (const char*)buf;
+    int rem = len;
+    while (rem > 0) {
+        int r = (int)write(fd, p, (size_t)rem);
+        if (r <= 0) return -1;
+        p   += r;
+        rem -= r;
+    }
+    return len;
 #endif
 }
 
@@ -238,8 +276,9 @@ int plat_stdin_ready(void *fds) {
     /* For pipe/console: PeekNamedPipe; fallback _kbhit */
     HANDLE h = GetStdHandle(STD_INPUT_HANDLE);
     DWORD avail = 0;
-    if (PeekNamedPipe(h, NULL, 0, NULL, &avail, NULL))
-        return avail > 0 ? 1 : 0;
+    if (!PeekNamedPipe(h, NULL, 0, NULL, &avail, NULL))
+        return 1;   /* pipe closed/broken → signal ready so fgets sees EOF */
+    if (avail > 0) return 1;
     /* Console: use _kbhit */
     return _kbhit() ? 1 : 0;
 #else
